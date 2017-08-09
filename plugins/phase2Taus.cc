@@ -199,6 +199,9 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    tree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
    tree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
    tree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
+   tree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
+   tree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
+   tree->Branch("tauByTightCombinedIsolationDeltaBetaCorr3Hits", &tauByTightCombinedIsolationDeltaBetaCorr3Hits_);
    tree->Branch("tauCombinedIsolationDeltaBetaCorrRaw3Hits", &tauCombinedIsolationDeltaBetaCorrRaw3Hits_);
    tree->Branch("tauPuCorrPtSum"  ,&tauPuCorrPtSum_);
    tree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
@@ -233,6 +236,9 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    OrgTaustree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
    OrgTaustree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
    OrgTaustree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
+   OrgTaustree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
+   OrgTaustree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
+   OrgTaustree->Branch("tauByTightCombinedIsolationDeltaBetaCorr3Hits", &tauByTightCombinedIsolationDeltaBetaCorr3Hits_);
    OrgTaustree->Branch("tauCombinedIsolationDeltaBetaCorrRaw3Hits", &tauCombinedIsolationDeltaBetaCorrRaw3Hits_);
    OrgTaustree->Branch("tauPuCorrPtSum"  ,&tauPuCorrPtSum_);
    OrgTaustree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
@@ -267,6 +273,9 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    jetTree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
    jetTree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
    jetTree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
+   jetTree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
+   jetTree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
+   jetTree->Branch("tauByTightCombinedIsolationDeltaBetaCorr3Hits", &tauByTightCombinedIsolationDeltaBetaCorr3Hits_);
    jetTree->Branch("tauCombinedIsolationDeltaBetaCorrRaw3Hits", &tauCombinedIsolationDeltaBetaCorrRaw3Hits_);
    jetTree->Branch("tauPuCorrPtSum"  ,&tauPuCorrPtSum_);
    jetTree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
@@ -301,6 +310,9 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    OrgTausjetTree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
    OrgTausjetTree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
    OrgTausjetTree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
+   OrgTausjetTree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
+   OrgTausjetTree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
+   OrgTausjetTree->Branch("tauByTightCombinedIsolationDeltaBetaCorr3Hits", &tauByTightCombinedIsolationDeltaBetaCorr3Hits_);
    OrgTausjetTree->Branch("tauCombinedIsolationDeltaBetaCorrRaw3Hits", &tauCombinedIsolationDeltaBetaCorrRaw3Hits_);
    OrgTausjetTree->Branch("tauPuCorrPtSum"  ,&tauPuCorrPtSum_);
    OrgTausjetTree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
