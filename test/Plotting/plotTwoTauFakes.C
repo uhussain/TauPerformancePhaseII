@@ -1,5 +1,3 @@
-#include "tdrstyle.C"
-#include "PlotStyles.C"
 #include "TCanvas.h"
 #include "TROOT.h"
 #include "TFile.h"
@@ -30,7 +28,9 @@
 #include "TStyle.h"
 #include "TAxis.h"
 #include "TGaxis.h"
-
+#include "tdrstyle.C"
+#include "PlotStyles.C"
+#include "CMS_lumi.C"
 void applyPadStyle(TPad* pad1){
   pad1->SetFillColor(0);
   pad1->Draw();  pad1->cd();  pad1->SetLeftMargin(0.15);  pad1->SetBottomMargin(0.13); pad1->SetRightMargin(0.05);
@@ -40,14 +40,18 @@ void applyPadStyle(TPad* pad1){
 
 void plotTwoTauFakes(){
   
-  TString fileName = "/data/uhussain/TwoTausEff_July26_hadd/QCD_pre4_miniAOD_TwoTaus_pu0.root";  
-  TString fileName1 = "/data/uhussain/TwoTausEff_July26_hadd/QCD_pre4_miniAOD_TwoTaus_pu140.root"; 
+  //TString fileName = "/data/uhussain/TwoTausEff_July26_hadd/QCD_pre4_miniAOD_TwoTaus_pu0.root";  
+  //TString fileName1 = "/data/uhussain/TwoTausEff_July26_hadd/QCD_pre4_miniAOD_TwoTaus_pu140.root"; 
   
-  TString treePath = "cutBased/jetOrgPFTaus"; 
+  TString fileName = "/data/uhussain/TwoTausEff_Aug8_hadd/GluHtoTT_PU0.root"; 
+  TString fileName1 = "/data/uhussain/TwoTausEff_Aug8_hadd/GluHtoTT_PU200.root"; 
+  TString fileName2 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_300.root";  
+  TString fileName3 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_3000.root"; 
+  //TString treePath = "cutBased/jetOrgPFTaus"; 
   TString treePath2 = "cutBased/jetModFixedStripTaus";
-  //int bins = 10;
-  //double low  = 0;
-  //double high = 200;
+  //int bins = 30;
+  //double low  = -1.5;
+  //double high = 1.5;
 
   float binarray[]={0,10,20,30,40,50,60,70,80,90,100,150,200};
   int bins = sizeof(binarray)/sizeof(float) -1 ;
@@ -60,16 +64,29 @@ void plotTwoTauFakes(){
   TString isoCut = "2";
   //Plotting Variables
   TString variable = "jetPt";
-  TString GenCut= "jetPt> 20 && jetPt < 200 && genJetMatch > 0 && abs(jetEta) < 2.3 && (dm!=5&&dm!=6 && dm > -1)";
+  TString GenCut= "jetPt> 20 && jetPt < 200 && genJetMatch > 0 && abs(jetEta) < 1.5 && (dm!=5&&dm!=6 && dm > -1)";
   
   //TString GenCut1= "genTauPt > 22 && abs(genTauEta)> 2.3 && abs(genTauEta) <4.0 && (dmf!=5&&dmf!=6 && dmf > -1) && (dmf == 10) &&"+z3;
  
   //TString RecoCut= "tauPt > 20 && abs(tauEta)<2.3 && jetTauMatch==1 && taupfTausDiscriminationByDecayModeFinding==1 && tauChargedIsoPtSum<1.5 &&" + GenCut;
 
-  TString RecoCut= "tauPt > 20 && abs(tauEta)<2.3 && taupfTausDiscriminationByDecayModeFindingNewDMs==1 && tauCombinedIsolationDeltaBetaCorrRaw3Hits<1.5 &&" + GenCut;
+  TString RecoCut= "tauPt > 20 && abs(tauEta)<1.5 && taupfTausDiscriminationByDecayModeFinding==1 &&" + GenCut;
 
+  setTDRStyle();
+
+  writeExtraText = true;       // if extra text
+  extraText  = "       Phase-2 Simulation";  // default extra text is "Preliminary"
+  lumi_8TeV  = "19.1 fb^{-1}"; // default is "19.7 fb^{-1}"
+  lumi_7TeV  = "4.9 fb^{-1}";  // default is "5.1 fb^{-1}"
+  lumi_sqrtS = "14 TeV";       // used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+
+  int iPeriod = 0;    // 1=7TeV, 2=8TeV, 3=7+8TeV, 7=7+8+13TeV, 0=free form (uses lumi_sqrtS)
+  int iPos = 0; //0 is out of the frame
+
+  gStyle->SetOptStat(0);
+  gROOT->ForceStyle();
   //Style
-  TString xaxis = "Gen Jet P_{T} (GeV}";
+  TString xaxis = "Gen Jet P_{T} [GeV]";
   int markerstyle = 20;
 
   Color_t color = TColor::GetColor("#283593");//dark blue color1
@@ -80,20 +97,18 @@ void plotTwoTauFakes(){
   //Color_t colort5 = TColor::GetColor("#0288D1"); //green blue color2
   Color_t color3 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
   
-  TString outFileName = "plot-Fakes-PT-pu0-140_newdmf_dBcorrIso_";
+  TString outFileName = "plot-Fakes-PT-pu0-200_olddmf";
   //TString legLabel = "jet #rightarrow #tau_{h} (QCDFlat) oldDMF && chargedIso < 1.5 GeV";
-  TString legLabel = "jet #rightarrow #tau_{h} (QCDFlat) newDMF & combinedIso (dBcorr) < 1.5 GeV";
-  setTDRStyle();
-
-  gStyle->SetOptStat(0);
-  gROOT->ForceStyle();
+  TString legLabel = "jet #rightarrow #tau_{h} (Fakes) oldDMF";
+  
+  
   TFile *tauFile    = new TFile(fileName);
-
+  //PU0
   if(!tauFile->IsOpen()||tauFile==0){
     std::cout<<"ERROR FILE "<< fileName<<" NOT FOUND; EXITING"<<std::endl;
     exit(0);
   }
-
+  //PU140
   TFile *tauFile1    = new TFile(fileName1);
 
   if(!tauFile1->IsOpen()||tauFile1==0){
@@ -101,42 +116,49 @@ void plotTwoTauFakes(){
     exit(0);
   }
 
-  //TFile *tauFile2    = new TFile(fileName1);
+  TFile *tauFile2    = new TFile(fileName2);
 
-  //if(!tauFile2->IsOpen()||tauFile2==0){
-  //  std::cout<<"ERROR FILE "<< fileName1<<" NOT FOUND; EXITING"<<std::endl;
-  //  exit(0);
-  //}
-  TCanvas *Tcan= new TCanvas("Tcan","",100,20,600,600); Tcan->cd();  Tcan->SetFillColor(0);
-  TPad* pad1 = new TPad("pad1","The pad",0,0,0.98,0.98);
+  if(!tauFile2->IsOpen()||tauFile2==0){
+    std::cout<<"ERROR FILE "<< fileName2<<" NOT FOUND; EXITING"<<std::endl;
+    exit(0);
+  }
+  TFile *tauFile3    = new TFile(fileName3);
 
-  applyPadStyle(pad1);
-  gStyle->SetOptFit(0);
-  gStyle->SetEndErrorSize(0);
-
+  if(!tauFile3->IsOpen()||tauFile3==0){
+    std::cout<<"ERROR FILE "<< fileName3<<" NOT FOUND; EXITING"<<std::endl;
+    exit(0);
+  }
   
-  TTree* tauTree = (TTree*)tauFile->Get(treePath);
+  TCanvas *c1 = new TCanvas("c","c",800,800);
+  c1->SetGrid();
+  //c1->SetLogy();
+  setCanvasStyle(c1);
+  c1->cd();
+  
+  //PU0 DYJets
+  TTree* tauTree = (TTree*)tauFile->Get(treePath2);
   if(tauTree == 0){
     std::cout<<"ERROR Tau Tree is "<< tauTree<<" NOT FOUND; EXITING"<<std::endl;
     exit(0);
          }
-  //PU0 Signal after fix
+  //PU200 DYJets
   TTree* tauTree1 = (TTree*)tauFile1->Get(treePath2);
-  if(tauTree == 0){
+  if(tauTree1 == 0){
     std::cout<<"ERROR Tau Tree is "<< tauTree1<<" NOT FOUND; EXITING"<<std::endl;
     exit(0);
-         }
-  TTree* tauTree2 = (TTree*)tauFile1->Get(treePath);
-  if(tauTree == 0){
+         } 
+ //ttbar 300 
+  TTree* tauTree2 = (TTree*)tauFile2->Get(treePath2);
+  if(tauTree2 == 0){
     std::cout<<"ERROR Tau Tree is "<< tauTree2<<" NOT FOUND; EXITING"<<std::endl;
     exit(0);
-         }
-  //PU200 Signal after fix
-  TTree* tauTree3 = (TTree*)tauFile1->Get(treePath2);
-  if(tauTree == 0){
+  }
+  //ttbar 3000
+  TTree* tauTree3 = (TTree*)tauFile3->Get(treePath2);
+  if(tauTree3 == 0){
     std::cout<<"ERROR Tau Tree is "<< tauTree3<<" NOT FOUND; EXITING"<<std::endl;
     exit(0);
-         }
+  }
   /// first
   TH1F* Denom;
   Denom = new TH1F("Denom","Denom",bins,binarray);
@@ -232,20 +254,20 @@ void plotTwoTauFakes(){
   gStyle->SetErrorX(0.5);
 
   TMultiGraph *mg = new TMultiGraph();
-  mg->SetTitle("Phase 2 Preliminary Studies");
+  //mg->SetTitle("Phase 2 Preliminary Studies");
 
   mg->Add(eff);
-  mg->Add(eff_1);
+  mg->Add(eff_1); 
   mg->Add(eff_2);
   mg->Add(eff_3);
-  
+
   mg->Draw("AP");
   
   mg->GetXaxis()->SetTitle(xaxis);
-  mg->GetYaxis()->SetTitle("Efficiency");
+  mg->GetYaxis()->SetTitle("Tau Misidentification Probability");
   mg->GetYaxis()->SetTitleOffset(1.1);
-  mg->SetMaximum(1.0);
-  mg->SetMinimum(0.0001);
+  mg->SetMaximum(1.5);
+  mg->SetMinimum(0);
   
 
 
@@ -256,15 +278,22 @@ void plotTwoTauFakes(){
   leg->SetFillColor(kWhite);
   leg->SetTextSize(0.025);
   //leg->AddEntry(pu200_eff,"PF Charged Iso All","PL"); 
-  leg->AddEntry(eff,"QCD 900_pre4 (PU0)-BeforeFix","PL");
-  leg->AddEntry(eff_1,"QCD 900_pre4 (PU0)-AfterFix","PL");
-  leg->AddEntry(eff_2,"QCD 900_pre4 (PU140)-BeforeFix","PL");
-  leg->AddEntry(eff_3,"QCD 900_pre4 (PU140)-AfterFix","PL"); 
+  leg->AddEntry(eff,"DYJets 911_patch3 (PU0)","PL");
+  leg->AddEntry(eff_1,"DYJets 911_patch3 (PU200)","PL");
+  leg->AddEntry(eff_2,"RelVal TTBar (ageing 300)","PL");
+  leg->AddEntry(eff_3,"RelVal TTBar (ageing 3000)","PL");
   //leg->AddEntry(Num,"0PU numerator","PL");
   //leg->AddEntry(Denom,"0PU denom","PL");
   leg->Draw();
 
+  c1->cd();
 
-  Tcan->cd();
-  Tcan->SaveAs("FakePlots/"+outFileName+".pdf");
+  //Writing the lumi info
+  CMS_lumi(c1, iPeriod, iPos );
+
+  c1->Update();
+  c1->RedrawAxis();
+  c1->GetFrame()->Draw();
+  c1->SaveAs("Aug9Plots/"+outFileName+".pdf");
+
 }
