@@ -34,10 +34,11 @@ void applyPadStyle(TPad* pad1){
       }
 void plotFakeTauDistributions(){ 
   
-  TString fileName = "/data/uhussain/TwoTausEff_Aug6_hadd/DYJetsToLL_PU0.root"; 
-  TString fileName1 = "/data/uhussain/TwoTausEff_Aug6_hadd/DYJetsToLL_PU200.root";
-  TString fileName2 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_300.root";  
-  TString fileName3 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_3000.root"; 
+  
+  TString fileName = "/data/uhussain/TwoTausEff_Aug8_hadd/DYJetsToLL_PU0.root"; 
+  TString fileName1 = "/data/uhussain/TwoTausEff_Aug8_hadd/DYJetsToLL_PU200.root";
+  TString fileName2 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_300.root";  
+  TString fileName3 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_3000.root"; 
   //TString fileName = "/data/uhussain/TwoTausEff_July26_hadd/QCD_pre4_miniAOD_TwoTaus_pu0.root";  
   //TString fileName1 = "/data/uhussain/TwoTausEff_July26_hadd/QCD_pre4_miniAOD_TwoTaus_pu140.root";  
   //TString fileName2 = "/data/uhussain/TwoTausEff_July18_hadd/GluHtoTT_911_miniAOD_TwoTaus_pu0.root"; 
@@ -86,6 +87,9 @@ void plotFakeTauDistributions(){
   Color_t color3 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
   
   TString outFileName = "tauMass-eta1.5-puall_Fakes";
+  
+  TString legLabel = "jet #rightarrow #tau_{h} (Fakes) from DYJets"; 
+  TString legLabel1 = "jet #rightarrow #tau_{h} (Fakes) from TTbar production (PU0)";
   
   TFile *tauFile    = new TFile(fileName);
 
@@ -171,7 +175,7 @@ void plotFakeTauDistributions(){
   ttbar_300->Scale(1/(ttbar_300->Integral()));
   ttbar_3000->Scale(1/(ttbar_3000->Integral()));
 
-  PU0_afterfix->GetXaxis()->SetTitle("Tau Mass (OldDMs)");  
+  PU0_afterfix->GetXaxis()->SetTitle("Tau Mass");  
   PU0_afterfix->GetYaxis()->SetTitle("a.u.");
   PU0_afterfix->GetXaxis()->SetTitleSize(0.03);
 
@@ -190,18 +194,24 @@ void plotFakeTauDistributions(){
   PU0_afterfix->SetMinimum(0);
   PU0_afterfix->SetMaximum(0.3);
 
-  TString legLabel = "jet #rightarrow #tau_{h} (Fakes)";
-  TLegend *leg = new TLegend(.30, .70, .55, .90,legLabel);  
+  TLegend *leg = new TLegend(.30,.844,.67,.925,legLabel,"nbNDC");
+  //setLegendStyles(leg,legLabel, 1);
   leg->SetBorderSize(0);
   leg->SetShadowColor(kWhite);
   leg->SetFillColor(kWhite);
-  leg->SetTextSize(0.03);
-  leg->AddEntry(PU0_afterfix,"DYJets 911_patch3 (PU0)"); 
-  leg->AddEntry(PU200_afterfix,"DYJets 911_patch3 (P200)");
-  leg->AddEntry(ttbar_300,"RelVal TTBar (ageing 300)","PL");
-  leg->AddEntry(ttbar_3000,"RelVal TTBar (ageing 3000)","PL");
+  leg->SetTextSize(0.025);
+  leg->AddEntry(PU0_afterfix,"PU0","PL");
+  leg->AddEntry(PU200_afterfix,"PU200","PL");
+  TLegend *leg1 = new TLegend(.30,.735,.67,.842,legLabel1,"nbNDC");
+  //setLegendStyles(leg,legLabel, 1);
+  leg1->SetBorderSize(0);
+  leg1->SetShadowColor(kWhite);
+  leg1->SetFillColor(kWhite);
+  leg1->SetTextSize(0.025); 
+  leg1->AddEntry(ttbar_300,"300 fb^{-1} lumi","PL");
+  leg1->AddEntry(ttbar_3000,"3000 fb^{-1} lumi","PL");
   leg->Draw();
-  
+  leg1->Draw();
 
   c1->cd();
 
@@ -211,5 +221,5 @@ void plotFakeTauDistributions(){
   c1->Update();
   c1->RedrawAxis();
   c1->GetFrame()->Draw();
-  c1->SaveAs("Aug9Plots/"+outFileName+".pdf");
+  c1->SaveAs("TDRPlots/"+outFileName+".pdf");
 }

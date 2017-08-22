@@ -42,19 +42,19 @@ void plotTwoTauClopperEfficiency(){
 
   TString fileName = "/data/uhussain/TwoTausEff_Aug8_hadd/GluHtoTT_PU0.root"; 
   TString fileName1 = "/data/uhussain/TwoTausEff_Aug8_hadd/GluHtoTT_PU200.root"; 
-  TString fileName2 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_300.root";  
-  TString fileName3 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_3000.root"; 
+  //TString fileName2 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_300.root";  
+  //TString fileName3 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_3000.root"; 
   //TString fileName = " /data/uhussain/TwoTausEff_July26_hadd/Ztt_pre4_miniAOD_TwoTaus_pu0.root";  
   //TString fileName1 = "/data/uhussain/TwoTausEff_July26_hadd/Ztt_pre4_miniAOD_TwoTaus_pu140.root"; 
   //TString fileName2 = "/data/uhussain/TauTiming_July_hadd/Ztt_pre4_pu200.root"; 
   //TString treePath = "cutBased/OrgPFTaus"; 
   TString treePath2 = "cutBased/ModFixedStripTaus";
-  int bins = 30;
-  double low  = -1.5;
-  double high = 1.5;
+  //int bins = 30;
+  //double low  = -1.5;
+  //double high = 1.5;
 
-  //float binarray[]={0,10,20,30,40,50,60,70,80,90,100,150,200};
-  //int bins = sizeof(binarray)/sizeof(float) -1 ;
+  float binarray[]={0,20,40,60,80,100,120,140,160,180,200};
+  int bins = sizeof(binarray)/sizeof(float) -1 ;
 
   //TString z1("abs(vtxZ) < 0.5"), 
   //  z2("abs(vtxZ) < 4.0 && abs(vtxZ) > 1.5"), 
@@ -63,7 +63,7 @@ void plotTwoTauClopperEfficiency(){
 
   TString isoCut = "2";
   //Plotting Variables
-  TString variable = "genTauEta";
+  TString variable = "genTauPt";
   TString GenCut= "genTauPt> 20 && abs(genTauEta) < 1.5 && (dm!=5&&dm!=6 && dm > -1)";
   
   //TString GenCut1= "genTauPt > 22 && abs(genTauEta)> 2.3 && abs(genTauEta) <4.0 && (dmf!=5&&dmf!=6 && dmf > -1) && (dmf == 10) &&"+z3;
@@ -90,15 +90,16 @@ void plotTwoTauClopperEfficiency(){
   gROOT->ForceStyle();
 
   //Style
-  TString xaxis = "Gen #tau_{vis} #eta";
+  TString xaxis = "Gen #tau_{vis} P_{T} (GeV)";
   int markerstyle = 20;
   Color_t color = TColor::GetColor("#283593");//dark blue color1
   Color_t color1 = TColor::GetColor("#F44336");//red color4
   Color_t color2 = TColor::GetColor("#0288D1"); //green blue color2 
   Color_t color3 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
   
-  TString outFileName = "plot-HTT-eta1.5-pu0-200_olddmf";
-  TString legLabel = "H #rightarrow #tau #tau oldDMF";
+  TString outFileName = "plot-HTT-PT-pu0-200_olddmf";
+  TString legLabel = "#tau_{h} from H #rightarrow #tau #tau (1000 fb^{-1})";
+  //TString legLabel1 = "#tau_{h} from TTbar production (PU0)";
 
   TH1F *basehist = new TH1F("basehist","",100,0,2.5);
 
@@ -119,21 +120,21 @@ void plotTwoTauClopperEfficiency(){
     exit(0);
   }
 
-  TFile *tauFile2    = new TFile(fileName2);
+ // TFile *tauFile2    = new TFile(fileName2);
 
-  if(!tauFile2->IsOpen()||tauFile2==0){
-    std::cout<<"ERROR FILE "<< fileName2<<" NOT FOUND; EXITING"<<std::endl;
-    exit(0);
-  }
-  TFile *tauFile3    = new TFile(fileName3);
+ // if(!tauFile2->IsOpen()||tauFile2==0){
+ //   std::cout<<"ERROR FILE "<< fileName2<<" NOT FOUND; EXITING"<<std::endl;
+ //   exit(0);
+ // }
+ // TFile *tauFile3    = new TFile(fileName3);
 
-  if(!tauFile3->IsOpen()||tauFile3==0){
-    std::cout<<"ERROR FILE "<< fileName3<<" NOT FOUND; EXITING"<<std::endl;
-    exit(0);
-  }
+ // if(!tauFile3->IsOpen()||tauFile3==0){
+ //   std::cout<<"ERROR FILE "<< fileName3<<" NOT FOUND; EXITING"<<std::endl;
+ //   exit(0);
+ // }
   
   TCanvas *c1 = new TCanvas("c","c",800,800);
-  c1->SetGrid();
+  //c1->SetGrid();
   //c1->SetLogy();
   setCanvasStyle(c1);
   c1->cd();
@@ -151,25 +152,25 @@ void plotTwoTauClopperEfficiency(){
     exit(0);
   }
  //ttbar 300 
-  TTree* tauTree2 = (TTree*)tauFile2->Get(treePath2);
-  if(tauTree2 == 0){
-    std::cout<<"ERROR Tau Tree is "<< tauTree2<<" NOT FOUND; EXITING"<<std::endl;
-    exit(0);
-  }
-  //ttbar 3000
-  TTree* tauTree3 = (TTree*)tauFile3->Get(treePath2);
-  if(tauTree3 == 0){
-    std::cout<<"ERROR Tau Tree is "<< tauTree3<<" NOT FOUND; EXITING"<<std::endl;
-    exit(0);
-  }
+ // TTree* tauTree2 = (TTree*)tauFile2->Get(treePath2);
+ // if(tauTree2 == 0){
+ //   std::cout<<"ERROR Tau Tree is "<< tauTree2<<" NOT FOUND; EXITING"<<std::endl;
+ //   exit(0);
+ // }
+ // //ttbar 3000
+ // TTree* tauTree3 = (TTree*)tauFile3->Get(treePath2);
+ // if(tauTree3 == 0){
+ //   std::cout<<"ERROR Tau Tree is "<< tauTree3<<" NOT FOUND; EXITING"<<std::endl;
+ //   exit(0);
+ // }
   /// first
   TH1F* Denom;
-  Denom = new TH1F("Denom","Denom",bins,low,high);
+  Denom = new TH1F("Denom","Denom",bins,binarray);
   Denom->Sumw2();
   tauTree->Draw(variable+">>+Denom",GenCut);
 
   TH1F* Num;
-  Num = new TH1F("Num","Num",bins,low,high);
+  Num = new TH1F("Num","Num",bins,binarray);
   tauTree->Draw(variable+">>+Num",RecoCut);
 
   TGraphAsymmErrors *eff = new TGraphAsymmErrors();
@@ -183,12 +184,12 @@ void plotTwoTauClopperEfficiency(){
 
   /// second
   TH1F* Denom1;
-  Denom1 = new TH1F("Denom1","Denom1",bins,low,high);
+  Denom1 = new TH1F("Denom1","Denom1",bins,binarray);
   Denom1->Sumw2();
   tauTree1->Draw(variable+">>+Denom1",GenCut);
 
   TH1F* Num1;
-  Num1 = new TH1F("Num1","Num1",bins,low,high);
+  Num1 = new TH1F("Num1","Num1",bins,binarray);
   tauTree1->Draw(variable+">>+Num1",RecoCut);
 
   TGraphAsymmErrors *eff_1 = new TGraphAsymmErrors();
@@ -207,47 +208,47 @@ void plotTwoTauClopperEfficiency(){
   eff_1->SetLineWidth((short)1.5);
   ////
   /// third
-  TH1F* Denom2;
-  Denom2 = new TH1F("Denom2","Denom2",bins,low,high);
-  Denom2->Sumw2();
-  tauTree2->Draw(variable+">>+Denom2",GenCut);
+  //TH1F* Denom2;
+  //Denom2 = new TH1F("Denom2","Denom2",bins,binarray);
+  //Denom2->Sumw2();
+  //tauTree2->Draw(variable+">>+Denom2",GenCut);
 
-  TH1F* Num2;
-  Num2 = new TH1F("Num2","Num2",bins,low,high);
-  tauTree2->Draw(variable+">>+Num2",RecoCut);
+  //TH1F* Num2;
+  //Num2 = new TH1F("Num2","Num2",bins,binarray);
+  //tauTree2->Draw(variable+">>+Num2",RecoCut);
 
-  TGraphAsymmErrors *eff_2 = new TGraphAsymmErrors();
+  //TGraphAsymmErrors *eff_2 = new TGraphAsymmErrors();
 
-  eff_2->Divide(Num2,Denom2,"cp");
-  //Num2->Divide(Denom2);
+  //eff_2->Divide(Num2,Denom2,"cp");
+  ////Num2->Divide(Denom2);
 
-  eff_2->SetMarkerStyle(markerstyle);
-  eff_2->SetMarkerColor(color2);
+  //eff_2->SetMarkerStyle(markerstyle);
+  //eff_2->SetMarkerColor(color2);
 
-  eff_2->SetFillStyle(1001);
-  eff_2->SetLineWidth((short)1.5);
-  ////
-  ///fourth
+  //eff_2->SetFillStyle(1001);
+  //eff_2->SetLineWidth((short)1.5);
+  //////
+  /////fourth
 
-  TH1F* Denom3;
-  Denom3 = new TH1F("Denom3","Denom3",bins,low,high);
-  Denom3->Sumw2();
-  tauTree3->Draw(variable+">>+Denom3",GenCut);
+  //TH1F* Denom3;
+  //Denom3 = new TH1F("Denom3","Denom3",bins,binarray);
+  //Denom3->Sumw2();
+  //tauTree3->Draw(variable+">>+Denom3",GenCut);
 
-  TH1F* Num3;
-  Num3 = new TH1F("Num3","Num3",bins,low,high);
-  tauTree3->Draw(variable+">>+Num3",RecoCut);
+  //TH1F* Num3;
+  //Num3 = new TH1F("Num3","Num3",bins,binarray);
+  //tauTree3->Draw(variable+">>+Num3",RecoCut);
 
-  TGraphAsymmErrors *eff_3 = new TGraphAsymmErrors();
+  //TGraphAsymmErrors *eff_3 = new TGraphAsymmErrors();
 
-  eff_3->Divide(Num3,Denom3,"cp");
-  //Num3->Divide(Denom3);
+  //eff_3->Divide(Num3,Denom3,"cp");
+  ////Num3->Divide(Denom3);
 
-  eff_3->SetMarkerStyle(markerstyle);
-  eff_3->SetMarkerColor(color3);
+  //eff_3->SetMarkerStyle(markerstyle);
+  //eff_3->SetMarkerColor(color3);
 
-  eff_3->SetFillStyle(1001);
-  eff_3->SetLineWidth((short)1.5);
+  //eff_3->SetFillStyle(1001);
+  //eff_3->SetLineWidth((short)1.5);
   
   gStyle->SetErrorX(0.5);
   
@@ -256,8 +257,8 @@ void plotTwoTauClopperEfficiency(){
 
   mg->Add(eff);
   mg->Add(eff_1);
-  mg->Add(eff_2);
-  mg->Add(eff_3);
+  //mg->Add(eff_2);
+  //mg->Add(eff_3);
   //Denom->Draw("P same");
 
   mg->Draw("AP");
@@ -269,17 +270,24 @@ void plotTwoTauClopperEfficiency(){
   mg->SetMinimum(0);
   
 
-  TLegend *leg = new TLegend(.30,.744,.67,.925,legLabel,"nbNDC");
+  TLegend *leg = new TLegend(.30,.744,.67,.905,legLabel,"nbNDC");
   //setLegendStyles(leg,legLabel, 1);
   leg->SetBorderSize(0);
   leg->SetShadowColor(kWhite);
   leg->SetFillColor(kWhite);
-  leg->SetTextSize(0.025);  
-  leg->AddEntry(eff,"Htt 911_patch3 (PU0)","PL");
-  leg->AddEntry(eff_1,"Htt 911_patch3 (PU200)","PL");
-  leg->AddEntry(eff_2,"RelVal TTBar (ageing 300)","PL");
-  leg->AddEntry(eff_3,"RelVal TTBar (ageing 3000)","PL");
+  leg->SetTextSize(0.025); 
+  leg->AddEntry(eff,"PU0","PL");
+  leg->AddEntry(eff_1,"PU200","PL");
+  //TLegend *leg1 = new TLegend(.30,.735,.67,.842,legLabel1,"nbNDC");
+  ////setLegendStyles(leg,legLabel, 1);
+  //leg1->SetBorderSize(0);
+  //leg1->SetShadowColor(kWhite);
+  //leg1->SetFillColor(kWhite);
+  //leg1->SetTextSize(0.025); 
+  //leg1->AddEntry(eff_2,"300 fb^{-1} lumi","PL");
+  //leg1->AddEntry(eff_3,"3000 fb^{-1} lumi","PL");
   leg->Draw();
+  //leg1->Draw();
 
   c1->cd();
 
@@ -289,6 +297,6 @@ void plotTwoTauClopperEfficiency(){
   c1->Update();
   c1->RedrawAxis();
   c1->GetFrame()->Draw();
-  c1->SaveAs("Aug9Plots/"+outFileName+".pdf");
+  c1->SaveAs("TDRPlots_Aug18/"+outFileName+".pdf");
 
 }
