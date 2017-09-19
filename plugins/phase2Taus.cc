@@ -83,16 +83,16 @@ class phase2Taus : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
    private:
   edm::EDGetTokenT<std::vector<reco::Vertex> > vtxToken_;
   edm::EDGetTokenT<pat::TauCollection> tauToken_; 
-  edm::EDGetTokenT<pat::TauCollection> tauOrgToken_;
+  //edm::EDGetTokenT<pat::TauCollection> tauOrgToken_;
   std::string tauID_;
   edm::EDGetTokenT<std::vector <reco::GenParticle> > prunedGenToken_;
   edm::EDGetTokenT<std::vector<pat::Jet> > jetsAK4Token_;
   edm::EDGetTokenT<std::vector<reco::GenJet> > genJetsToken_;
 
   TTree* tree;
-  TTree* OrgTaustree;
+  //TTree* OrgTaustree;
   TTree* jetTree;
-  TTree* OrgTausjetTree;
+  //TTree* OrgTausjetTree;
   int     run_;
   int  event_;
   int     lumis_;
@@ -159,7 +159,7 @@ class phase2Taus : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
 phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
   vtxToken_(consumes<std::vector<reco::Vertex> >(iConfig.getParameter<edm::InputTag>("vertices"))),
   tauToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("taus"))),
-  tauOrgToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("tausOrg"))),
+  //tauOrgToken_(consumes<pat::TauCollection>(iConfig.getParameter<edm::InputTag>("tausOrg"))),
   prunedGenToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
   jetsAK4Token_(consumes<std::vector<pat::Jet> >(iConfig.getParameter<edm::InputTag>("jets"))),
   genJetsToken_(consumes<std::vector<reco::GenJet> >(iConfig.getParameter<edm::InputTag>("genJets")))
@@ -207,42 +207,42 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    tree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
    tree->Branch("tauphotonPtSumOutsideSignalCone"  ,&tauphotonPtSumOutsideSignalCone_);
    
-   OrgTaustree = fs->make<TTree>("OrgPFTaus", "OrgPFTaus");
-   OrgTaustree->Branch("run",     &run_);
-   OrgTaustree->Branch("event",   &event_);
-   OrgTaustree->Branch("lumis",   &lumis_);
-   OrgTaustree->Branch("tauPt", &tauPt_,"tauPt_/D");
-   OrgTaustree->Branch("tauEta", &tauEta_,"tauEta_/D");
-   OrgTaustree->Branch("genTauPt", &genTauPt_,"genTauPt_/D");
-   OrgTaustree->Branch("genTauEta", &genTauEta_,"genTauEta_/D");
-   OrgTaustree->Branch("genTauMatch", &genTauMatch_,"genTauMatch_/I");
-   OrgTaustree->Branch("nvtx",&nvtx_,"nvtx_/I");
-   OrgTaustree->Branch("vtxX",         &vtxX_,        "vtxX_/D"         );
-   OrgTaustree->Branch("vtxY",         &vtxY_,        "vtxY_/D"         );
-   OrgTaustree->Branch("vtxZ",         &vtxZ_,        "vtxZ_/D"         );
-   OrgTaustree->Branch("vtxIndex",     &vtxIndex_,    "vtxIndex_/I"     );
-   OrgTaustree->Branch("dm",&dm_,"dm_/I");
-   OrgTaustree->Branch("goodReco",&goodReco_,"goodReco_/I");
-   OrgTaustree->Branch("tauMass",&tauMass_,"tauMass_/D");
-   OrgTaustree->Branch("taupfTausDiscriminationByDecayModeFinding", &taupfTausDiscriminationByDecayModeFinding_);
-   OrgTaustree->Branch("taupfTausDiscriminationByDecayModeFindingNewDMs", &taupfTausDiscriminationByDecayModeFindingNewDMs_);
-   OrgTaustree->Branch("tauByIsolationMVArun2v1DBnewDMwLTraw", &tauByIsolationMVArun2v1DBnewDMwLTraw_);
-   OrgTaustree->Branch("tauByIsolationMVArun2v1DBoldDMwLTraw", &tauByIsolationMVArun2v1DBoldDMwLTraw_);
-   OrgTaustree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
-   OrgTaustree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
-   OrgTaustree->Branch("tauByIsolationMVArun2v1DBnewDMwLTraw", &tauByIsolationMVArun2v1DBnewDMwLTraw_);
-   OrgTaustree->Branch("tauByIsolationMVArun2v1DBoldDMwLTraw", &tauByIsolationMVArun2v1DBoldDMwLTraw_);
-   OrgTaustree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
-   OrgTaustree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
-   OrgTaustree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
-   OrgTaustree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
-   OrgTaustree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
-   OrgTaustree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
-   OrgTaustree->Branch("tauByTightCombinedIsolationDeltaBetaCorr3Hits", &tauByTightCombinedIsolationDeltaBetaCorr3Hits_);
-   OrgTaustree->Branch("tauCombinedIsolationDeltaBetaCorrRaw3Hits", &tauCombinedIsolationDeltaBetaCorrRaw3Hits_);
-   OrgTaustree->Branch("tauPuCorrPtSum"  ,&tauPuCorrPtSum_);
-   OrgTaustree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
-   OrgTaustree->Branch("tauphotonPtSumOutsideSignalCone"  ,&tauphotonPtSumOutsideSignalCone_);
+   //OrgTaustree = fs->make<TTree>("OrgPFTaus", "OrgPFTaus");
+   //OrgTaustree->Branch("run",     &run_);
+   //OrgTaustree->Branch("event",   &event_);
+   //OrgTaustree->Branch("lumis",   &lumis_);
+   //OrgTaustree->Branch("tauPt", &tauPt_,"tauPt_/D");
+   //OrgTaustree->Branch("tauEta", &tauEta_,"tauEta_/D");
+   //OrgTaustree->Branch("genTauPt", &genTauPt_,"genTauPt_/D");
+   //OrgTaustree->Branch("genTauEta", &genTauEta_,"genTauEta_/D");
+   //OrgTaustree->Branch("genTauMatch", &genTauMatch_,"genTauMatch_/I");
+   //OrgTaustree->Branch("nvtx",&nvtx_,"nvtx_/I");
+   //OrgTaustree->Branch("vtxX",         &vtxX_,        "vtxX_/D"         );
+   //OrgTaustree->Branch("vtxY",         &vtxY_,        "vtxY_/D"         );
+   //OrgTaustree->Branch("vtxZ",         &vtxZ_,        "vtxZ_/D"         );
+   //OrgTaustree->Branch("vtxIndex",     &vtxIndex_,    "vtxIndex_/I"     );
+   //OrgTaustree->Branch("dm",&dm_,"dm_/I");
+   //OrgTaustree->Branch("goodReco",&goodReco_,"goodReco_/I");
+   //OrgTaustree->Branch("tauMass",&tauMass_,"tauMass_/D");
+   //OrgTaustree->Branch("taupfTausDiscriminationByDecayModeFinding", &taupfTausDiscriminationByDecayModeFinding_);
+   //OrgTaustree->Branch("taupfTausDiscriminationByDecayModeFindingNewDMs", &taupfTausDiscriminationByDecayModeFindingNewDMs_);
+   //OrgTaustree->Branch("tauByIsolationMVArun2v1DBnewDMwLTraw", &tauByIsolationMVArun2v1DBnewDMwLTraw_);
+   //OrgTaustree->Branch("tauByIsolationMVArun2v1DBoldDMwLTraw", &tauByIsolationMVArun2v1DBoldDMwLTraw_);
+   //OrgTaustree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
+   //OrgTaustree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
+   //OrgTaustree->Branch("tauByIsolationMVArun2v1DBnewDMwLTraw", &tauByIsolationMVArun2v1DBnewDMwLTraw_);
+   //OrgTaustree->Branch("tauByIsolationMVArun2v1DBoldDMwLTraw", &tauByIsolationMVArun2v1DBoldDMwLTraw_);
+   //OrgTaustree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
+   //OrgTaustree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
+   //OrgTaustree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
+   //OrgTaustree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
+   //OrgTaustree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
+   //OrgTaustree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
+   //OrgTaustree->Branch("tauByTightCombinedIsolationDeltaBetaCorr3Hits", &tauByTightCombinedIsolationDeltaBetaCorr3Hits_);
+   //OrgTaustree->Branch("tauCombinedIsolationDeltaBetaCorrRaw3Hits", &tauCombinedIsolationDeltaBetaCorrRaw3Hits_);
+   //OrgTaustree->Branch("tauPuCorrPtSum"  ,&tauPuCorrPtSum_);
+   //OrgTaustree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
+   //OrgTaustree->Branch("tauphotonPtSumOutsideSignalCone"  ,&tauphotonPtSumOutsideSignalCone_);
 
    jetTree = fs->make<TTree>(      "jetModFixedStripTaus",   "jetModFixedStripTaus"       );
    jetTree->Branch("run",     &run_);
@@ -281,42 +281,42 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    jetTree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
    jetTree->Branch("tauphotonPtSumOutsideSignalCone"  ,&tauphotonPtSumOutsideSignalCone_);
 
-   OrgTausjetTree = fs->make<TTree>(      "jetOrgPFTaus",   "jetOrgPFTaus"       );
-   OrgTausjetTree->Branch("run",     &run_);
-   OrgTausjetTree->Branch("event",   &event_);
-   OrgTausjetTree->Branch("lumis",   &lumis_);  
-   OrgTausjetTree->Branch("tauPt",        &tauPt_,       "tauPt_/D"        );
-   OrgTausjetTree->Branch("tauEta",       &tauEta_,      "tauEta_/D"       );
-   OrgTausjetTree->Branch("jetPt",        &jetPt_,       "jetPt_/D"        );
-   OrgTausjetTree->Branch("jetEta",       &jetEta_,      "jetEta_/D"       );
-   OrgTausjetTree->Branch("genJetMatch",  &genJetMatch_, "genJetMatch_/I"  );
-   OrgTausjetTree->Branch("jetTauMatch",  &jetTauMatch_, "jetTauMatch_/I"  );
-   OrgTausjetTree->Branch("nvtx",         &nvtx_,        "nvtx_/I"         );
-   OrgTausjetTree->Branch("vtxX",         &vtxX_,        "vtxX_/D"         );
-   OrgTausjetTree->Branch("vtxY",         &vtxY_,        "vtxY_/D"         );
-   OrgTausjetTree->Branch("vtxZ",         &vtxZ_,        "vtxZ_/D"         ); 
-   //OrgTausjetTree->Branch("vtxIndex",     &vtxIndex_,    "vtxIndex_/I"     );
-   OrgTausjetTree->Branch("dm",          &dm_,         "dm_/I"          );
-   OrgTausjetTree->Branch("tauMass",      &tauMass_,     "tauMass_/D"      );
-   OrgTausjetTree->Branch("taupfTausDiscriminationByDecayModeFinding", &taupfTausDiscriminationByDecayModeFinding_);
-   OrgTausjetTree->Branch("taupfTausDiscriminationByDecayModeFindingNewDMs", &taupfTausDiscriminationByDecayModeFindingNewDMs_);
-   OrgTausjetTree->Branch("tauByIsolationMVArun2v1DBnewDMwLTraw", &tauByIsolationMVArun2v1DBnewDMwLTraw_);
-   OrgTausjetTree->Branch("tauByIsolationMVArun2v1DBoldDMwLTraw", &tauByIsolationMVArun2v1DBoldDMwLTraw_);
-   OrgTausjetTree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
-   OrgTausjetTree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
-   OrgTausjetTree->Branch("tauByIsolationMVArun2v1DBnewDMwLTraw", &tauByIsolationMVArun2v1DBnewDMwLTraw_);
-   OrgTausjetTree->Branch("tauByIsolationMVArun2v1DBoldDMwLTraw", &tauByIsolationMVArun2v1DBoldDMwLTraw_);
-   OrgTausjetTree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
-   OrgTausjetTree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
-   OrgTausjetTree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
-   OrgTausjetTree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
-   OrgTausjetTree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
-   OrgTausjetTree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
-   OrgTausjetTree->Branch("tauByTightCombinedIsolationDeltaBetaCorr3Hits", &tauByTightCombinedIsolationDeltaBetaCorr3Hits_);
-   OrgTausjetTree->Branch("tauCombinedIsolationDeltaBetaCorrRaw3Hits", &tauCombinedIsolationDeltaBetaCorrRaw3Hits_);
-   OrgTausjetTree->Branch("tauPuCorrPtSum"  ,&tauPuCorrPtSum_);
-   OrgTausjetTree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
-   OrgTausjetTree->Branch("tauphotonPtSumOutsideSignalCone"  ,&tauphotonPtSumOutsideSignalCone_);
+   //OrgTausjetTree = fs->make<TTree>(      "jetOrgPFTaus",   "jetOrgPFTaus"       );
+   //OrgTausjetTree->Branch("run",     &run_);
+   //OrgTausjetTree->Branch("event",   &event_);
+   //OrgTausjetTree->Branch("lumis",   &lumis_);  
+   //OrgTausjetTree->Branch("tauPt",        &tauPt_,       "tauPt_/D"        );
+   //OrgTausjetTree->Branch("tauEta",       &tauEta_,      "tauEta_/D"       );
+   //OrgTausjetTree->Branch("jetPt",        &jetPt_,       "jetPt_/D"        );
+   //OrgTausjetTree->Branch("jetEta",       &jetEta_,      "jetEta_/D"       );
+   //OrgTausjetTree->Branch("genJetMatch",  &genJetMatch_, "genJetMatch_/I"  );
+   //OrgTausjetTree->Branch("jetTauMatch",  &jetTauMatch_, "jetTauMatch_/I"  );
+   //OrgTausjetTree->Branch("nvtx",         &nvtx_,        "nvtx_/I"         );
+   //OrgTausjetTree->Branch("vtxX",         &vtxX_,        "vtxX_/D"         );
+   //OrgTausjetTree->Branch("vtxY",         &vtxY_,        "vtxY_/D"         );
+   //OrgTausjetTree->Branch("vtxZ",         &vtxZ_,        "vtxZ_/D"         ); 
+   ////OrgTausjetTree->Branch("vtxIndex",     &vtxIndex_,    "vtxIndex_/I"     );
+   //OrgTausjetTree->Branch("dm",          &dm_,         "dm_/I"          );
+   //OrgTausjetTree->Branch("tauMass",      &tauMass_,     "tauMass_/D"      );
+   //OrgTausjetTree->Branch("taupfTausDiscriminationByDecayModeFinding", &taupfTausDiscriminationByDecayModeFinding_);
+   //OrgTausjetTree->Branch("taupfTausDiscriminationByDecayModeFindingNewDMs", &taupfTausDiscriminationByDecayModeFindingNewDMs_);
+   //OrgTausjetTree->Branch("tauByIsolationMVArun2v1DBnewDMwLTraw", &tauByIsolationMVArun2v1DBnewDMwLTraw_);
+   //OrgTausjetTree->Branch("tauByIsolationMVArun2v1DBoldDMwLTraw", &tauByIsolationMVArun2v1DBoldDMwLTraw_);
+   //OrgTausjetTree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
+   //OrgTausjetTree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
+   //OrgTausjetTree->Branch("tauByIsolationMVArun2v1DBnewDMwLTraw", &tauByIsolationMVArun2v1DBnewDMwLTraw_);
+   //OrgTausjetTree->Branch("tauByIsolationMVArun2v1DBoldDMwLTraw", &tauByIsolationMVArun2v1DBoldDMwLTraw_);
+   //OrgTausjetTree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
+   //OrgTausjetTree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
+   //OrgTausjetTree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
+   //OrgTausjetTree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
+   //OrgTausjetTree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
+   //OrgTausjetTree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
+   //OrgTausjetTree->Branch("tauByTightCombinedIsolationDeltaBetaCorr3Hits", &tauByTightCombinedIsolationDeltaBetaCorr3Hits_);
+   //OrgTausjetTree->Branch("tauCombinedIsolationDeltaBetaCorrRaw3Hits", &tauCombinedIsolationDeltaBetaCorrRaw3Hits_);
+   //OrgTausjetTree->Branch("tauPuCorrPtSum"  ,&tauPuCorrPtSum_);
+   //OrgTausjetTree->Branch("taufootprintCorrection"  ,&taufootprintCorrection_);
+   //OrgTausjetTree->Branch("tauphotonPtSumOutsideSignalCone"  ,&tauphotonPtSumOutsideSignalCone_);
 }
 
 
@@ -346,8 +346,8 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    Handle<pat::TauCollection> taus;
    iEvent.getByToken(tauToken_, taus);
    
-   Handle<pat::TauCollection> tausOrg;
-   iEvent.getByToken(tauOrgToken_, tausOrg);
+   //Handle<pat::TauCollection> tausOrg;
+   //iEvent.getByToken(tauOrgToken_, tausOrg);
 
    Handle<reco::GenJetCollection> genJets;
    iEvent.getByToken(genJetsToken_,genJets);
@@ -517,123 +517,123 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     tree->Fill(); 
    }
    //duplicating the code above for OrigTaus (built with Orig PFTaus from AOD)
-   for(auto genTau : GenTaus){
-     tauPt_=-10;
-     tauEta_=-10;
-     tauMass_=-10;
-     
-     taupfTausDiscriminationByDecayModeFinding_=0;
-     taupfTausDiscriminationByDecayModeFindingNewDMs_=0; 
-     tauByLooseCombinedIsolationDeltaBetaCorr3Hits_=0;
-     tauByMediumCombinedIsolationDeltaBetaCorr3Hits_=0;
-     tauByTightCombinedIsolationDeltaBetaCorr3Hits_=0;
-       
-     tauCombinedIsolationDeltaBetaCorrRaw3Hits_=-10;  
-     tauByIsolationMVArun2v1DBnewDMwLTraw_=-10;
-     tauByIsolationMVArun2v1DBoldDMwLTraw_=-10;
-     tauByIsolationMVArun2v1PWnewDMwLTraw_=-10;
-     tauByIsolationMVArun2v1PWoldDMwLTraw_=-10;
-     
-     tauChargedIsoPtSum_=-10;
-     tauNeutralIsoPtSum_=-10;
-     tauPuCorrPtSum_=-10;
+  // for(auto genTau : GenTaus){
+  //   tauPt_=-10;
+  //   tauEta_=-10;
+  //   tauMass_=-10;
+  //   
+  //   taupfTausDiscriminationByDecayModeFinding_=0;
+  //   taupfTausDiscriminationByDecayModeFindingNewDMs_=0; 
+  //   tauByLooseCombinedIsolationDeltaBetaCorr3Hits_=0;
+  //   tauByMediumCombinedIsolationDeltaBetaCorr3Hits_=0;
+  //   tauByTightCombinedIsolationDeltaBetaCorr3Hits_=0;
+  //     
+  //   tauCombinedIsolationDeltaBetaCorrRaw3Hits_=-10;  
+  //   tauByIsolationMVArun2v1DBnewDMwLTraw_=-10;
+  //   tauByIsolationMVArun2v1DBoldDMwLTraw_=-10;
+  //   tauByIsolationMVArun2v1PWnewDMwLTraw_=-10;
+  //   tauByIsolationMVArun2v1PWoldDMwLTraw_=-10;
+  //   
+  //   tauChargedIsoPtSum_=-10;
+  //   tauNeutralIsoPtSum_=-10;
+  //   tauPuCorrPtSum_=-10;
 
-     taufootprintCorrection_=-10;
-     tauphotonPtSumOutsideSignalCone_=-10;
-     genTauPt_=-10;
-     genTauEta_=-10;
-     
-     nvtx_=-10;
-     dm_=-10;
-     goodReco_=0;
-     genTauMatch_=0;
+  //   taufootprintCorrection_=-10;
+  //   tauphotonPtSumOutsideSignalCone_=-10;
+  //   genTauPt_=-10;
+  //   genTauEta_=-10;
+  //   
+  //   nvtx_=-10;
+  //   dm_=-10;
+  //   goodReco_=0;
+  //   genTauMatch_=0;
 
-     std::vector<const reco::GenParticle*> genTauDaughters;
-     findDaughters(genTau, genTauDaughters);
-     reco::Candidate::LorentzVector genTauVis = GetVisibleP4(genTauDaughters);
-     genTauPt_  = (float) genTauVis.pt();
-     genTauEta_ = (float) genTauVis.eta();
+  //   std::vector<const reco::GenParticle*> genTauDaughters;
+  //   findDaughters(genTau, genTauDaughters);
+  //   reco::Candidate::LorentzVector genTauVis = GetVisibleP4(genTauDaughters);
+  //   genTauPt_  = (float) genTauVis.pt();
+  //   genTauEta_ = (float) genTauVis.eta();
 
-     //std::cout<<" pt "<<genTauPt_<<" eta "<<genTauEta_<<std::endl;
-     for(const pat::Tau &tau : *tausOrg){
-       if (reco::deltaR(tau.eta(),tau.phi(),genTauVis.eta(),genTauVis.phi()) < 0.5 && tau.tauID("decayModeFinding")>-1 && tau.tauID("chargedIsoPtSum")>-1){ 
-        std::cout<<"RecoTauMatched"<<std::endl;
-        genTauMatch_ = 1;
-	      tauPt_  =tau.pt();
-	      tauEta_ =tau.eta();
-        tauMass_=tau.mass();
-	      dm_ =tau.decayMode();
+  //   //std::cout<<" pt "<<genTauPt_<<" eta "<<genTauEta_<<std::endl;
+  //   for(const pat::Tau &tau : *tausOrg){
+  //     if (reco::deltaR(tau.eta(),tau.phi(),genTauVis.eta(),genTauVis.phi()) < 0.5 && tau.tauID("decayModeFinding")>-1 && tau.tauID("chargedIsoPtSum")>-1){ 
+  //      std::cout<<"RecoTauMatched"<<std::endl;
+  //      genTauMatch_ = 1;
+	//      tauPt_  =tau.pt();
+	//      tauEta_ =tau.eta();
+  //      tauMass_=tau.mass();
+	//      dm_ =tau.decayMode();
 
-        taupfTausDiscriminationByDecayModeFinding_=tau.tauID("decayModeFinding");
-        taupfTausDiscriminationByDecayModeFindingNewDMs_=tau.tauID("decayModeFindingNewDMs");   
-        tauByLooseCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits");
-        tauByMediumCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits");
-        tauByTightCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits");
-        tauCombinedIsolationDeltaBetaCorrRaw3Hits_=tau.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
-        tauByIsolationMVArun2v1DBnewDMwLTraw_=tau.tauID("byIsolationMVArun2v1DBnewDMwLTraw");
-        tauByIsolationMVArun2v1DBoldDMwLTraw_=tau.tauID("byIsolationMVArun2v1DBoldDMwLTraw");
-        tauByIsolationMVArun2v1PWnewDMwLTraw_=tau.tauID("byIsolationMVArun2v1PWnewDMwLTraw");
-        tauByIsolationMVArun2v1PWoldDMwLTraw_=tau.tauID("byIsolationMVArun2v1PWoldDMwLTraw");
+  //      taupfTausDiscriminationByDecayModeFinding_=tau.tauID("decayModeFinding");
+  //      taupfTausDiscriminationByDecayModeFindingNewDMs_=tau.tauID("decayModeFindingNewDMs");   
+  //      tauByLooseCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits");
+  //      tauByMediumCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits");
+  //      tauByTightCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits");
+  //      tauCombinedIsolationDeltaBetaCorrRaw3Hits_=tau.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
+  //      tauByIsolationMVArun2v1DBnewDMwLTraw_=tau.tauID("byIsolationMVArun2v1DBnewDMwLTraw");
+  //      tauByIsolationMVArun2v1DBoldDMwLTraw_=tau.tauID("byIsolationMVArun2v1DBoldDMwLTraw");
+  //      tauByIsolationMVArun2v1PWnewDMwLTraw_=tau.tauID("byIsolationMVArun2v1PWnewDMwLTraw");
+  //      tauByIsolationMVArun2v1PWoldDMwLTraw_=tau.tauID("byIsolationMVArun2v1PWoldDMwLTraw");
 
-        tauChargedIsoPtSum_=tau.tauID("chargedIsoPtSum");
-        tauNeutralIsoPtSum_=tau.tauID("neutralIsoPtSum");
-        tauPuCorrPtSum_=tau.tauID("puCorrPtSum");
-        taufootprintCorrection_=tau.tauID("footprintCorrection");
-        tauphotonPtSumOutsideSignalCone_=tau.tauID("photonPtSumOutsideSignalCone");
-	      goodReco_ = (bool) tau.tauID(tauID_) >0.5;
+  //      tauChargedIsoPtSum_=tau.tauID("chargedIsoPtSum");
+  //      tauNeutralIsoPtSum_=tau.tauID("neutralIsoPtSum");
+  //      tauPuCorrPtSum_=tau.tauID("puCorrPtSum");
+  //      taufootprintCorrection_=tau.tauID("footprintCorrection");
+  //      tauphotonPtSumOutsideSignalCone_=tau.tauID("photonPtSumOutsideSignalCone");
+	//      goodReco_ = (bool) tau.tauID(tauID_) >0.5;
 
-        //get the matched vertex
-        int vtx_index = -1;
-        //float max_weight = 0.f;
-        //for( unsigned i = 0; i < vertices->size(); ++i ) {
-        //  const auto& vtx = (*vertices)[i];     
-        //  //std::cout<<"fine here"<<std::endl;
-        //  const float weight = vtx.trackWeight(tau.leadChargedHadrCand()->trackRef());// check me -> Get track ref for charged hadron candidate 
-        // // std::cout<<"fails here"<<std::endl;
-        //  if( weight > max_weight ) {
-        //    max_weight = weight;
-        //    vtx_index = i;
-        //   }
-        //      }
+  //      //get the matched vertex
+  //      int vtx_index = -1;
+  //      //float max_weight = 0.f;
+  //      //for( unsigned i = 0; i < vertices->size(); ++i ) {
+  //      //  const auto& vtx = (*vertices)[i];     
+  //      //  //std::cout<<"fine here"<<std::endl;
+  //      //  const float weight = vtx.trackWeight(tau.leadChargedHadrCand()->trackRef());// check me -> Get track ref for charged hadron candidate 
+  //      // // std::cout<<"fails here"<<std::endl;
+  //      //  if( weight > max_weight ) {
+  //      //    max_weight = weight;
+  //      //    vtx_index = i;
+  //      //   }
+  //      //      }
 
-       // if (vertices->size()>0) {
-       //       pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(tau.leadChargedHadrCand().get());
-       //       float max_weight = 0.f;
-       //       for( unsigned i = 0; i < vertices->size(); ++i ) {
-       //         const auto& vtx = (*vertices)[i];     
-       //         //std::cout<<"fine here"<<std::endl;
-       //         reco::TrackBaseRef const& trk = dynamic_cast<reco::TrackBaseRef const&>(packedLeadTauCand->bestTrack());
-       //         //const auto& trk = *(packedLeadTauCand->bestTrack());
-       //         const float weight = vtx.trackWeight(trk);// check me -> Get track ref for charged hadron candidate 
-       //        // std::cout<<"fails here"<<std::endl;
-       //         if( weight > max_weight ) {
-       //           max_weight = weight;
-       //           vtx_index = i;
-       //          }
-       //             }
-        
-        pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(tau.leadChargedHadrCand().get());
-        const auto& TauVtx = packedLeadTauCand->vertexRef();
+  //     // if (vertices->size()>0) {
+  //     //       pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(tau.leadChargedHadrCand().get());
+  //     //       float max_weight = 0.f;
+  //     //       for( unsigned i = 0; i < vertices->size(); ++i ) {
+  //     //         const auto& vtx = (*vertices)[i];     
+  //     //         //std::cout<<"fine here"<<std::endl;
+  //     //         reco::TrackBaseRef const& trk = dynamic_cast<reco::TrackBaseRef const&>(packedLeadTauCand->bestTrack());
+  //     //         //const auto& trk = *(packedLeadTauCand->bestTrack());
+  //     //         const float weight = vtx.trackWeight(trk);// check me -> Get track ref for charged hadron candidate 
+  //     //        // std::cout<<"fails here"<<std::endl;
+  //     //         if( weight > max_weight ) {
+  //     //           max_weight = weight;
+  //     //           vtx_index = i;
+  //     //          }
+  //     //             }
+  //      
+  //      pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(tau.leadChargedHadrCand().get());
+  //      const auto& TauVtx = packedLeadTauCand->vertexRef();
 
-        for( unsigned i = 0; i < vertices->size(); ++i ) {
-          const auto& vtx = (*vertices)[i]; 
-          if(vtx.x()==TauVtx->x() && vtx.y()==TauVtx->y() && vtx.z()==TauVtx->z()){
-            vtx_index=i;
-          }
-        }
-        //const auto& TauVtx=tau.leadChargedHadrCand()->vertexRef();
-        std::cout<<"vtx_index: "<<vtx_index<<std::endl;
-	      //now do vtx variable filling
-	      vtxIndex_ = vtx_index;
-	      const reco::Vertex& vtx = (vtx_index == -1 ? (*vertices)[0] : (*vertices)[vtx_index]);
-	      vtxX_ = vtx.x();
-	      vtxY_ = vtx.y();
-	      vtxZ_ = vtx.z();
-	      break;
-            }
-          }
-    OrgTaustree->Fill(); 
-   }
+  //      for( unsigned i = 0; i < vertices->size(); ++i ) {
+  //        const auto& vtx = (*vertices)[i]; 
+  //        if(vtx.x()==TauVtx->x() && vtx.y()==TauVtx->y() && vtx.z()==TauVtx->z()){
+  //          vtx_index=i;
+  //        }
+  //      }
+  //      //const auto& TauVtx=tau.leadChargedHadrCand()->vertexRef();
+  //      std::cout<<"vtx_index: "<<vtx_index<<std::endl;
+	//      //now do vtx variable filling
+	//      vtxIndex_ = vtx_index;
+	//      const reco::Vertex& vtx = (vtx_index == -1 ? (*vertices)[0] : (*vertices)[vtx_index]);
+	//      vtxX_ = vtx.x();
+	//      vtxY_ = vtx.y();
+	//      vtxZ_ = vtx.z();
+	//      break;
+  //          }
+  //        }
+  //  OrgTaustree->Fill(); 
+  // }
    //jetTree for ModFixedStripTaus
    for(auto jet : Jets){
      tauPt_=-10;
@@ -722,93 +722,93 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     }
    //jetTree for OrigTaus
-   for(auto jet : Jets){
-     tauPt_=-10;
-     tauEta_=-10;
-     tauMass_=-10;
+  // for(auto jet : Jets){
+  //   tauPt_=-10;
+  //   tauEta_=-10;
+  //   tauMass_=-10;
 
-     taupfTausDiscriminationByDecayModeFinding_=0;
-     taupfTausDiscriminationByDecayModeFindingNewDMs_=0; 
-     tauByLooseCombinedIsolationDeltaBetaCorr3Hits_=0;
-     tauByMediumCombinedIsolationDeltaBetaCorr3Hits_=0;
-     tauByTightCombinedIsolationDeltaBetaCorr3Hits_=0;
-       
-     tauCombinedIsolationDeltaBetaCorrRaw3Hits_=-10;  
-     tauByIsolationMVArun2v1DBnewDMwLTraw_=-10;
-     tauByIsolationMVArun2v1DBoldDMwLTraw_=-10;
-     tauByIsolationMVArun2v1PWnewDMwLTraw_=-10;
-     tauByIsolationMVArun2v1PWoldDMwLTraw_=-10;
-     
-     tauChargedIsoPtSum_=-10;
-     tauNeutralIsoPtSum_=-10;
-     tauPuCorrPtSum_=-10;
+  //   taupfTausDiscriminationByDecayModeFinding_=0;
+  //   taupfTausDiscriminationByDecayModeFindingNewDMs_=0; 
+  //   tauByLooseCombinedIsolationDeltaBetaCorr3Hits_=0;
+  //   tauByMediumCombinedIsolationDeltaBetaCorr3Hits_=0;
+  //   tauByTightCombinedIsolationDeltaBetaCorr3Hits_=0;
+  //     
+  //   tauCombinedIsolationDeltaBetaCorrRaw3Hits_=-10;  
+  //   tauByIsolationMVArun2v1DBnewDMwLTraw_=-10;
+  //   tauByIsolationMVArun2v1DBoldDMwLTraw_=-10;
+  //   tauByIsolationMVArun2v1PWnewDMwLTraw_=-10;
+  //   tauByIsolationMVArun2v1PWoldDMwLTraw_=-10;
+  //   
+  //   tauChargedIsoPtSum_=-10;
+  //   tauNeutralIsoPtSum_=-10;
+  //   tauPuCorrPtSum_=-10;
 
-     taufootprintCorrection_=-10;
-     tauphotonPtSumOutsideSignalCone_=-10;
-     jetPt_=jet.pt();
-     jetEta_=jet.eta();
-     
-     //nvtx_=-10;
-     dm_=-10;
-     jetTauMatch_=0;
+  //   taufootprintCorrection_=-10;
+  //   tauphotonPtSumOutsideSignalCone_=-10;
+  //   jetPt_=jet.pt();
+  //   jetEta_=jet.eta();
+  //   
+  //   //nvtx_=-10;
+  //   dm_=-10;
+  //   jetTauMatch_=0;
 
-     genJetMatch_ = 0;
+  //   genJetMatch_ = 0;
 
-     for (unsigned int iGenJet = 0; iGenJet < genJets->size() ; ++iGenJet){
-       reco::GenJetRef genJet(genJets, iGenJet);
-       if (reco::deltaR(genJet->eta(),genJet->phi(),jet.eta(),jet.phi()) < 0.4)
-         genJetMatch_ = 1;
-    }
+  //   for (unsigned int iGenJet = 0; iGenJet < genJets->size() ; ++iGenJet){
+  //     reco::GenJetRef genJet(genJets, iGenJet);
+  //     if (reco::deltaR(genJet->eta(),genJet->phi(),jet.eta(),jet.phi()) < 0.4)
+  //       genJetMatch_ = 1;
+  //  }
 
-     for(const pat::Tau &tau : *tausOrg){
-       if (reco::deltaR(tau.eta(),tau.phi(),jet.eta(),jet.phi()) < 0.3 && tau.tauID("decayModeFinding")>-1 && tau.tauID("chargedIsoPtSum")>-1){
-	      jetTauMatch_ = 1;
-	      tauPt_  =tau.pt();
-	      tauEta_ =tau.eta();
-        tauMass_=tau.mass();
-	      dm_ =tau.decayMode();
+  //   for(const pat::Tau &tau : *tausOrg){
+  //     if (reco::deltaR(tau.eta(),tau.phi(),jet.eta(),jet.phi()) < 0.3 && tau.tauID("decayModeFinding")>-1 && tau.tauID("chargedIsoPtSum")>-1){
+	//      jetTauMatch_ = 1;
+	//      tauPt_  =tau.pt();
+	//      tauEta_ =tau.eta();
+  //      tauMass_=tau.mass();
+	//      dm_ =tau.decayMode();
 
-        taupfTausDiscriminationByDecayModeFinding_=tau.tauID("decayModeFinding");
-        taupfTausDiscriminationByDecayModeFindingNewDMs_=tau.tauID("decayModeFindingNewDMs");   
-        tauByLooseCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits");
-        tauByMediumCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits");
-        tauByTightCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits");
-        tauCombinedIsolationDeltaBetaCorrRaw3Hits_=tau.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
-        tauByIsolationMVArun2v1DBnewDMwLTraw_=tau.tauID("byIsolationMVArun2v1DBnewDMwLTraw");
-        tauByIsolationMVArun2v1DBoldDMwLTraw_=tau.tauID("byIsolationMVArun2v1DBoldDMwLTraw");
-        tauByIsolationMVArun2v1PWnewDMwLTraw_=tau.tauID("byIsolationMVArun2v1PWnewDMwLTraw");
-        tauByIsolationMVArun2v1PWoldDMwLTraw_=tau.tauID("byIsolationMVArun2v1PWoldDMwLTraw");
+  //      taupfTausDiscriminationByDecayModeFinding_=tau.tauID("decayModeFinding");
+  //      taupfTausDiscriminationByDecayModeFindingNewDMs_=tau.tauID("decayModeFindingNewDMs");   
+  //      tauByLooseCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits");
+  //      tauByMediumCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits");
+  //      tauByTightCombinedIsolationDeltaBetaCorr3Hits_=tau.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits");
+  //      tauCombinedIsolationDeltaBetaCorrRaw3Hits_=tau.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
+  //      tauByIsolationMVArun2v1DBnewDMwLTraw_=tau.tauID("byIsolationMVArun2v1DBnewDMwLTraw");
+  //      tauByIsolationMVArun2v1DBoldDMwLTraw_=tau.tauID("byIsolationMVArun2v1DBoldDMwLTraw");
+  //      tauByIsolationMVArun2v1PWnewDMwLTraw_=tau.tauID("byIsolationMVArun2v1PWnewDMwLTraw");
+  //      tauByIsolationMVArun2v1PWoldDMwLTraw_=tau.tauID("byIsolationMVArun2v1PWoldDMwLTraw");
 
-        tauChargedIsoPtSum_=tau.tauID("chargedIsoPtSum");
-        tauNeutralIsoPtSum_=tau.tauID("neutralIsoPtSum");
-        tauPuCorrPtSum_=tau.tauID("puCorrPtSum");
-        taufootprintCorrection_=tau.tauID("footprintCorrection");
-        tauphotonPtSumOutsideSignalCone_=tau.tauID("photonPtSumOutsideSignalCone");
-        //get the matched vertex
-        int vtx_index = -1;
-        //float max_weight = 0.f;
-        //for( unsigned i = 0; i < vertices->size(); ++i ) {
-        //  const auto& vtx = (*vertices)[i];     
-        //  const float weight = vtx.trackWeight(tau.leadPFChargedHadrCand()->trackRef());// check me -> Get track ref for charged hadron candidate
-        //  if( weight > max_weight ) {
-        //    max_weight = weight;
-        //    vtx_index = i;
-        //   }
-        //      }
+  //      tauChargedIsoPtSum_=tau.tauID("chargedIsoPtSum");
+  //      tauNeutralIsoPtSum_=tau.tauID("neutralIsoPtSum");
+  //      tauPuCorrPtSum_=tau.tauID("puCorrPtSum");
+  //      taufootprintCorrection_=tau.tauID("footprintCorrection");
+  //      tauphotonPtSumOutsideSignalCone_=tau.tauID("photonPtSumOutsideSignalCone");
+  //      //get the matched vertex
+  //      int vtx_index = -1;
+  //      //float max_weight = 0.f;
+  //      //for( unsigned i = 0; i < vertices->size(); ++i ) {
+  //      //  const auto& vtx = (*vertices)[i];     
+  //      //  const float weight = vtx.trackWeight(tau.leadPFChargedHadrCand()->trackRef());// check me -> Get track ref for charged hadron candidate
+  //      //  if( weight > max_weight ) {
+  //      //    max_weight = weight;
+  //      //    vtx_index = i;
+  //      //   }
+  //      //      }
 
-	      //now do vtx variable filling
-	      //vtxIndex_ = vtx_index;
-	      const reco::Vertex& vtx = (vtx_index == -1 ? (*vertices)[0] : (*vertices)[vtx_index]);
-	      vtxX_ = vtx.x();
-	      vtxY_ = vtx.y();
-	      vtxZ_ = vtx.z();
-	      
-        break;
-            }
-          }
-    OrgTausjetTree->Fill(); 
+	//      //now do vtx variable filling
+	//      //vtxIndex_ = vtx_index;
+	//      const reco::Vertex& vtx = (vtx_index == -1 ? (*vertices)[0] : (*vertices)[vtx_index]);
+	//      vtxX_ = vtx.x();
+	//      vtxY_ = vtx.y();
+	//      vtxZ_ = vtx.z();
+	//      
+  //      break;
+  //          }
+  //        }
+  //  OrgTausjetTree->Fill(); 
 
-    }
+  //  }
 
 }
 
