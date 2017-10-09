@@ -9,7 +9,8 @@ options = VarParsing ('analysis')
 #options.inputFiles="/store/relval/CMSSW_9_0_0_pre4/RelValZTT_14TeV/MINIAODSIM/90X_upgrade2023_realistic_v3_2023D4Timing-v1/10000/0CF569B0-B4EC-E611-A970-0025905B85DC.root"
 #options.inputFiles="/store/relval/CMSSW_9_0_0_pre4/RelValZTT_14TeV/MINIAODSIM/PU25ns_90X_upgrade2023_realistic_v3_D4TPU200c2-v1/10000/22224E09-53F1-E611-A2E9-0CC47A4D7670.root"
 #options.inputFiles="/store/user/adewit/Jun22_MC_91X/GluGluHToTauTau_M125_14TeV_powheg_pythia8/crab_GluGluHToTauTau_M-125-barrel-200PU-miniAOD/170711_074522/0000/out_miniAOD_prod_99.root"
-#options.outputFile ="TwoTaus_Htt_911_pu200_test.root"
+#options.inputFiles="/store/relval/CMSSW_9_3_0_pre4/RelValZTT_14TeV/MINIAODSIM/PU25ns_93X_upgrade2023_realistic_v0_D17PU200-v1/00000/0E0A0B4C-AF89-E711-B67F-A4BF0103375E.root"
+#options.outputFile ="Ztt_930_pre4_pu200_test.root"
 
 options.register('inputFileList', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Manual file list input, will query DAS if empty')
 options.parseArguments()
@@ -22,7 +23,7 @@ process.MessageLogger.cerr.threshold = cms.untracked.string('INFO')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '91X_upgrade2023_realistic_v3', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '93X_upgrade2023_realistic_v0', '')
 
 #how many events to run over
 process.maxEvents = cms.untracked.PSet(
@@ -46,8 +47,8 @@ process.source = cms.Source("PoolSource",
 process.cutBased = cms.EDAnalyzer("phase2Taus",
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
     taus = cms.InputTag("slimmedTaus"),
-    tausOrg = cms.InputTag("slimmedTausOrg"),
     jets = cms.InputTag("slimmedJets"),
+    genJets=cms.InputTag("slimmedGenJets"),
     tauID = cms.string("byCombinedIsolationDeltaBetaCorrRaw3Hits"),
     pruned = cms.InputTag("prunedGenParticles")
 )
