@@ -1,4 +1,4 @@
-DATE=July19
+DATE=Aug29
 
 rm -rf /data/uhussain/TwoTausEff_${DATE}_hadd/
 mkdir -p /data/uhussain/TwoTausEff_${DATE}_hadd/
@@ -8,9 +8,9 @@ mkdir -p /data/uhussain/TwoTausEff_${DATE}_hadd/
 #for dir in Ztt_pre4_miniADO_pu0 Ztt_pre4_miniADO_pu140 Ztt_pre4_miniADO_pu200; do
 
 
-for dir in RelValTTbar_miniAOD_300 RelValTTbar_miniAOD_3000; do 
+for dir in RelValZTT_MiniAOD_PU0 RelValZTT_MiniAOD_PU140 RelValZTT_MiniAOD_PU200 QCD_Flat_MiniAOD_PU0 QCD_Flat_MiniAOD_PU140 QCD_Flat_MiniAOD_PU200; do
     
-  hadd -f /data/uhussain/TwoTausEff_${DATE}_hadd/${dir}.root /hdfs/store/user/uhussain/${dir}-TwoTausEff_911_patch3_${DATE}/*.root
+  hadd -f /data/uhussain/TwoTausEff_${DATE}_hadd/${dir}.root /hdfs/store/user/uhussain/${dir}-TwoTausEff_930_pre4_${DATE}/*.root
 
 done
 
