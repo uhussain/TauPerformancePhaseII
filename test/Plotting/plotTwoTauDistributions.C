@@ -32,20 +32,20 @@ void applyPadStyle(TPad* pad1){
     pad1->SetLogy();
     pad1->SetGrid(10,10);
       }
-void plotTwoTauDistributions(){ 
-  
-  
-  TString fileName = "/data/uhussain/TwoTausEff_Aug8_hadd/GluHtoTT_PU0.root"; 
-  TString fileName1 = "/data/uhussain/TwoTausEff_Aug8_hadd/GluHtoTT_PU200.root"; 
-  //TString fileName2 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_300.root";  
+void plotTwoTauDistributions(){   
+  //TString fileName = "/data/uhussain/TwoTausEff_Aug29_hadd/RelValZTT_MiniAOD_PU0.root"; 
+  //TString fileName1 = "/data/uhussain/TwoTausEff_Aug29_hadd/RelValZTT_MiniAOD_PU140.root"; 
+  //TString fileName2 = "/data/uhussain/TwoTausEff_Aug29_hadd/RelValZTT_MiniAOD_PU200.root"; 
   //TString fileName3 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_3000.root"; 
-  //TString fileName = "/data/uhussain/TwoTausEff_July26_hadd/Ztt_pre4_miniAOD_TwoTaus_pu0.root";  
-  //TString fileName1 = "/data/uhussain/TwoTausEff_July26_hadd/Ztt_pre4_miniAOD_TwoTaus_pu140.root"; 
-  //TString fileName2 = "/data/uhussain/TauTiming_July_hadd/Ztt_pre4_pu200.root"; 
+  TString fileName = "/data/uhussain/TwoTausEff_Aug29_hadd/QCD_Flat_MiniAOD_PU0.root";  
+  TString fileName1 = "/data/uhussain/TwoTausEff_Aug29_hadd/QCD_Flat_MiniAOD_PU140.root"; 
+  TString fileName2 = "/data/uhussain/TwoTausEff_Aug29_hadd/QCD_Flat_MiniAOD_PU200.root"; 
   //TString treePath = "cutBased/OrgPFTaus"; 
-  TString treePath2 = "cutBased/ModFixedStripTaus";
+  
+  TString treePath2 = "cutBased/jetModFixedStripTaus";
+  //TString treePath2 = "cutBased/ModFixedStripTaus";
   int bins = 25;
-  double low  = 0.0;
+  double low  = 0;
   double high = 2.5;
 
   //float binarray[]={0,20,40,60,80,100,120,140,160,180,200};
@@ -85,16 +85,18 @@ void plotTwoTauDistributions(){
 
   Color_t color = TColor::GetColor("#283593");//dark blue color1
   Color_t color1 = TColor::GetColor("#F44336");//red color4
-  Color_t color2 = TColor::GetColor("#0288D1"); //green blue color2 
-  Color_t color3 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
+  Color_t color3 = TColor::GetColor("#0288D1"); //green blue color2 
+  Color_t color2 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
   //Color_t colort3 = TColor::GetColor("#00FFFF");//Cyan
   //Color_t colort4 = TColor::GetColor("#F44336");//red color4
   //Color_t colort5 = TColor::GetColor("#0288D1"); //green blue color2
   //Color_t colort6 = TColor::GetColor("#FF00FF"); //magenta 
 
-  TString outFileName = "tauMass-eta1.5-puall_HTT";
+  //TString outFileName = "tauMass-eta1.4-3.0-puall_ZTT";
+  TString outFileName = "tauMass-eta1.5-puall_QCD";
 
-  TString legLabel = "#tau_{h} from H #rightarrow #tau #tau (1000 fb^{-1})";
+  //TString legLabel = "#tau_{h} from Z #rightarrow #tau #tau (RelVal)"; 
+  TString legLabel = "jet #rightarrow #tau_{h} (Fakes) from QCD_Pt-15To7000"; 
   ///TString legLabel1 = "#tau_{h} from TTbar production (PU0)";
   
   TFile *tauFile    = new TFile(fileName);
@@ -111,12 +113,12 @@ void plotTwoTauDistributions(){
     exit(0);
            }
 
-  //TFile *tauFile2    = new TFile(fileName2);
+  TFile *tauFile2    = new TFile(fileName2);
 
-  //if(!tauFile2->IsOpen()||tauFile2==0){
-  //  std::cout<<"ERROR FILE "<< fileName2<<" NOT FOUND; EXITING"<<std::endl;
-  //  exit(0);
-  //}
+  if(!tauFile2->IsOpen()||tauFile2==0){
+    std::cout<<"ERROR FILE "<< fileName2<<" NOT FOUND; EXITING"<<std::endl;
+    exit(0);
+  }
   //TFile *tauFile3    = new TFile(fileName3);
 
   //if(!tauFile3->IsOpen()||tauFile3==0){
@@ -136,19 +138,19 @@ void plotTwoTauDistributions(){
     std::cout<<"ERROR Tau Tree is "<< tauTree<<" NOT FOUND; EXITING"<<std::endl;
     exit(0);
          }
-  //PU200 Signal after fix
+  //PU140 Signal after fix
   TTree* tauTree1 = (TTree*)tauFile1->Get(treePath2);
   if(tauTree1 == 0){
     std::cout<<"ERROR Tau Tree is "<< tauTree1<<" NOT FOUND; EXITING"<<std::endl;
     exit(0);
          }
 
- //ttbar 300 
- // TTree* tauTree2 = (TTree*)tauFile2->Get(treePath2);
- // if(tauTree2 == 0){
- //   std::cout<<"ERROR Tau Tree is "<< tauTree2<<" NOT FOUND; EXITING"<<std::endl;
- //   exit(0);
- // }
+  //PU200
+  TTree* tauTree2 = (TTree*)tauFile2->Get(treePath2);
+  if(tauTree2 == 0){
+    std::cout<<"ERROR Tau Tree is "<< tauTree2<<" NOT FOUND; EXITING"<<std::endl;
+    exit(0);
+  }
  // //ttbar 3000
  // TTree* tauTree3 = (TTree*)tauFile3->Get(treePath2);
  // if(tauTree3 == 0){
@@ -158,40 +160,46 @@ void plotTwoTauDistributions(){
   //make the histograms
   //TH1F* tauPt,tauPt_t3,tauPt_t4,tauPt_t5,tauPt_t6;
   //
-  TH1F* PU0_afterfix = new TH1F("PU0_afterfix","PU0_afterfix",bins,low,high); 
+  TH1F* PU0_afterfix = new TH1F("PU0_afterfix","PU0_afterfix",bins,low,high);  
+  TH1F* PU140_afterfix = new TH1F("PU140_afterfix","PU140_afterfix",bins,low,high); 
   TH1F* PU200_afterfix = new TH1F("PU200_afterfix","PU200_afterfix",bins,low,high);  
   //TH1F* ttbar_300 = new TH1F("ttbar_300","ttbar_300",bins,low,high); 
   //TH1F* ttbar_3000 = new TH1F("ttbar_3000","ttbar_3000",bins,low,high); 
   
-  tauTree->Draw(variable+">>PU0_afterfix",basic);
-  tauTree1->Draw(variable+">>PU200_afterfix",basic);
+  tauTree->Draw(variable+">>PU0_afterfix",basic); 
+  tauTree1->Draw(variable+">>PU140_afterfix",basic);
+  tauTree2->Draw(variable+">>PU200_afterfix",basic);
   //tauTree2->Draw(variable+">>ttbar_300",basic);
   //tauTree3->Draw(variable+">>ttbar_3000",basic);
   
-  PU0_afterfix->SetLineColor(color);
-  PU200_afterfix->SetLineColor(color1);
+  PU0_afterfix->SetLineColor(color); 
+  PU140_afterfix->SetLineColor(color1);
+  PU200_afterfix->SetLineColor(color2);
   //ttbar_300->SetLineColor(color2);
   //ttbar_3000->SetLineColor(color3);
 
   //Normalize the histograms
-  PU0_afterfix->Scale(1/(PU0_afterfix->Integral()));
+  PU0_afterfix->Scale(1/(PU0_afterfix->Integral())); 
+  PU140_afterfix->Scale(1/(PU140_afterfix->Integral()));
   PU200_afterfix->Scale(1/(PU200_afterfix->Integral()));
   //ttbar_300->Scale(1/(ttbar_300->Integral()));
   //ttbar_3000->Scale(1/(ttbar_3000->Integral()));
 
   PU0_afterfix->GetXaxis()->SetTitle("Tau Mass (GeV)");
-  //PU0_afterfix->GetXaxis()->SetTitle("Tau Mass");
+  //PU0_afterfix->GetXaxis()->SetTitle("Tau Mass (GeV)");
   //PU0_afterfix->GetXaxis()->SetTitle("Tau Mass (Old DMs)"); 
   PU0_afterfix->GetYaxis()->SetTitle("a.u.");
   PU0_afterfix->GetXaxis()->SetTitleSize(0.03);
 
   PU0_afterfix->GetXaxis()->SetTitleOffset(1.4);
-  PU0_afterfix->Draw("HIST");
+  PU0_afterfix->Draw("HIST"); 
+  PU140_afterfix->Draw("HIST SAME");
   PU200_afterfix->Draw("HIST SAME");
   //ttbar_300->Draw("HIST SAME");
   //ttbar_3000->Draw("HIST SAME");
 
-  PU0_afterfix->SetLineWidth(2);  
+  PU0_afterfix->SetLineWidth(2);   
+  PU140_afterfix->SetLineWidth(2);  
   PU200_afterfix->SetLineWidth(2);
   //ttbar_300->SetLineWidth(2); 
   //ttbar_3000->SetLineWidth(2);
@@ -205,7 +213,8 @@ void plotTwoTauDistributions(){
   //leg->SetShadowColor(kWhite);
   //leg->SetFillColor(kWhite);
   leg->SetTextSize(0.025); 
-  leg->AddEntry(PU0_afterfix,"PU0","PL");
+  leg->AddEntry(PU0_afterfix,"PU0","PL"); 
+  leg->AddEntry(PU140_afterfix,"PU140","PL");
   leg->AddEntry(PU200_afterfix,"PU200","PL");
   //TLegend *leg1 = new TLegend(.30,.735,.67,.832,legLabel1,"nbNDC");
   ////setLegendStyles(leg,legLabel, 1);
@@ -226,5 +235,5 @@ void plotTwoTauDistributions(){
   c1->Update();
   c1->RedrawAxis();
   c1->GetFrame()->Draw();
-  c1->SaveAs("TDRPlots_Aug18/"+outFileName+".pdf");
+  c1->SaveAs("930Pre4Plots_Aug30/"+outFileName+".pdf");
 }
