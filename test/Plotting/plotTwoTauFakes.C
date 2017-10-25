@@ -39,37 +39,38 @@ void applyPadStyle(TPad* pad1){
 }
 
 void plotTwoTauFakes(){
-  
-  
-  TString fileName = "/data/uhussain/TwoTausEff_Aug29_hadd/QCD_Flat_MiniAOD_PU0.root";  
-  TString fileName1 = "/data/uhussain/TwoTausEff_Aug29_hadd/QCD_Flat_MiniAOD_PU140.root"; 
-  TString fileName2 = "/data/uhussain/TwoTausEff_Aug29_hadd/QCD_Flat_MiniAOD_PU200.root"; 
+   
+  //TString fileName = "/data/uhussain/TwoTausEff_Aug8_hadd/DYJetsToLL_PU0.root"; 
+  //TString fileName2 = "/data/uhussain/TwoTausEff_Aug8_hadd/DYJetsToLL_PU200.root";
+  TString fileName = "/data/uhussain/Phase2Taus_Oct25_hadd/QCD_Flat_MiniAOD_PU0.root";  
+  //TString fileName1 = "/data/uhussain/Phase2Taus_Oct25_hadd/QCD_Flat_MiniAOD_PU140.root"; 
+  TString fileName2 = "/data/uhussain/Phase2Taus_Oct25_hadd/QCD_Flat_MiniAOD_PU200.root"; 
   //TString fileName2 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_300.root";  
   //TString fileName3 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_3000.root"; 
   //TString treePath = "cutBased/jetOrgPFTaus"; 
   TString treePath2 = "cutBased/jetModFixedStripTaus";
-  int bins = 30;
-  double low  = -3.0;
-  double high = 3.0;
+  //int bins = 30;
+  //double low  = -3.0;
+  //double high = 3.0;
 
-  //float binarray[]={0,20,40,60,80,100,120,160,200};
-  //int bins = sizeof(binarray)/sizeof(float) -1 ;
+  float binarray[]={0,20,40,60,80,100,120,160,200};
+  int bins = sizeof(binarray)/sizeof(float) -1 ;
 
-  TString z1("abs(vtxZ) < 0.5"), 
-    z2("abs(vtxZ) < 4.0 && abs(vtxZ) > 1.5"), 
-    z3("abs(vtxZ) < 6.0 && abs(vtxZ) > 4.0"), 
-    z4("abs(vtxZ) < 9.0 && abs(vtxZ) > 7.75");
+  //TString z1("abs(vtxZ) < 0.5"), 
+  //  z2("abs(vtxZ) < 4.0 && abs(vtxZ) > 1.5"), 
+  //  z3("abs(vtxZ) < 6.0 && abs(vtxZ) > 4.0"), 
+  //  z4("abs(vtxZ) < 9.0 && abs(vtxZ) > 7.75");
 
   TString isoCut = "2";
   //Plotting Variables
-  TString variable = "jetEta";
-  TString GenCut= "jetPt> 20 && jetPt < 200 && genJetMatch > 0  && abs(jetEta) < 3.0 && (dm!=5&&dm!=6 && dm > -1)";
+  TString variable = "jetPt";
+  TString GenCut= "jetPt> 20 && jetPt < 400 && genJetMatch > 0  && (jetEta) > 1.4 && (jetEta) < 3.0 && (dm!=5&&dm!=6 && dm > -1)";
   
   //TString GenCut1= "genTauPt > 22 && abs(genTauEta)> 2.3 && abs(genTauEta) <4.0 && (dmf!=5&&dmf!=6 && dmf > -1) && (dmf == 10) &&"+z3;
  
   //TString RecoCut= "tauPt > 20 && abs(tauEta)<2.3 && jetTauMatch==1 && taupfTausDiscriminationByDecayModeFinding==1 && tauChargedIsoPtSum<1.5 &&" + GenCut;
 
-  TString RecoCut= "tauPt > 20 && abs(tauEta)< 3.0 && taupfTausDiscriminationByDecayModeFinding==1 &&" + GenCut;
+  TString RecoCut= "tauPt > 20 && (tauEta) > 1.4 && (tauEta)< 3.0 && taupfTausDiscriminationByDecayModeFinding==1 &&" + GenCut;
 
   setTDRStyle();
 
@@ -85,7 +86,7 @@ void plotTwoTauFakes(){
   gStyle->SetOptStat(0);
   gROOT->ForceStyle();
   //Style
-  TString xaxis = "Gen Jet #eta";
+  TString xaxis = "Gen Jet P_{T} (GeV)";
   int markerstyle = 20;
 
   Color_t color = TColor::GetColor("#283593");//dark blue color1
@@ -96,7 +97,7 @@ void plotTwoTauFakes(){
   //Color_t colort5 = TColor::GetColor("#0288D1"); //green blue color2
   Color_t color2 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
   
-  TString outFileName = "plot-Fakes-eta3.0-puall_olddmf";
+  TString outFileName = "plot-Fakes-PT-HGCAL-puall_olddmf";
 
   //TString legLabel = "jet #rightarrow #tau_{h} (QCDFlat) oldDMF && chargedIso < 1.5 GeV";
   TString legLabel = "jet #rightarrow #tau_{h} (Fakes) from QCD_Pt-15To7000"; 
@@ -111,12 +112,12 @@ void plotTwoTauFakes(){
     exit(0);
   }
   //PU140
-  TFile *tauFile1    = new TFile(fileName1);
+  //TFile *tauFile1    = new TFile(fileName1);
 
-  if(!tauFile1->IsOpen()||tauFile1==0){
-    std::cout<<"ERROR FILE "<< fileName1<<" NOT FOUND; EXITING"<<std::endl;
-    exit(0);
-  }
+  //if(!tauFile1->IsOpen()||tauFile1==0){
+  //  std::cout<<"ERROR FILE "<< fileName1<<" NOT FOUND; EXITING"<<std::endl;
+  //  exit(0);
+  //}
 
   TFile *tauFile2    = new TFile(fileName2);
 
@@ -144,11 +145,11 @@ void plotTwoTauFakes(){
     exit(0);
          }
   //PU140 DYJets
-  TTree* tauTree1 = (TTree*)tauFile1->Get(treePath2);
-  if(tauTree1 == 0){
-    std::cout<<"ERROR Tau Tree is "<< tauTree1<<" NOT FOUND; EXITING"<<std::endl;
-    exit(0);
-         } 
+  //TTree* tauTree1 = (TTree*)tauFile1->Get(treePath2);
+  //if(tauTree1 == 0){
+  //  std::cout<<"ERROR Tau Tree is "<< tauTree1<<" NOT FOUND; EXITING"<<std::endl;
+  //  exit(0);
+  //       } 
  //PU200 
   TTree* tauTree2 = (TTree*)tauFile2->Get(treePath2);
   if(tauTree2 == 0){
@@ -163,14 +164,15 @@ void plotTwoTauFakes(){
   //}
   /// first
   TH1F* Denom;
-  Denom = new TH1F("Denom","Denom",bins,low,high);
+  Denom = new TH1F("Denom","Denom",bins,binarray);
   Denom->Sumw2();
   tauTree->Draw(variable+">>+Denom",GenCut);
 
   TH1F* Num;
-  Num = new TH1F("Num","Num",bins,low,high);
+  Num = new TH1F("Num","Num",bins,binarray);
   tauTree->Draw(variable+">>+Num",RecoCut);
-  
+  std::cout<<"PU0 denominator: "<<Denom->Integral()<<std::endl;
+  std::cout<<"PU0 Numerator: "<<Num->Integral()<<std::endl; 
   TGraphAsymmErrors *eff = new TGraphAsymmErrors();
   eff->Divide(Num,Denom,"cp");
 
@@ -181,49 +183,52 @@ void plotTwoTauFakes(){
   //Num->Divide(Denom);
 
   /// second
-  TH1F* Denom1;
-  Denom1 = new TH1F("Denom1","Denom1",bins,low,high);
-  Denom1->Sumw2();
-  tauTree1->Draw(variable+">>+Denom1",GenCut);
+ // TH1F* Denom1;
+ // Denom1 = new TH1F("Denom1","Denom1",bins,binarray);
+ // Denom1->Sumw2();
+ // tauTree1->Draw(variable+">>+Denom1",GenCut);
 
-  TH1F* Num1;
-  Num1 = new TH1F("Num1","Num1",bins,low,high);
-  tauTree1->Draw(variable+">>+Num1",RecoCut);
+ // TH1F* Num1;
+ // Num1 = new TH1F("Num1","Num1",bins,binarray);
+ // tauTree1->Draw(variable+">>+Num1",RecoCut);
 
-  TGraphAsymmErrors *eff_1 = new TGraphAsymmErrors();
- 
-  //Num1->Divide(Denom1);
-  //for( unsigned ibin=1; ibin < Num1->GetNbinsX(); ++ibin )
-  // std::cout << ibin << " pass/total: " <<Num1->GetBinContent(ibin) << std::endl;
-  
-  eff_1->Divide(Num1,Denom1,"cp");
-  
-  //Num1->Divide(Denom1);
-  eff_1->SetMarkerStyle(markerstyle);
-  eff_1->SetMarkerColor(color1);
+ // TGraphAsymmErrors *eff_1 = new TGraphAsymmErrors();
+ //
+ // //Num1->Divide(Denom1);
+ // //for( unsigned ibin=1; ibin < Num1->GetNbinsX(); ++ibin )
+ // // std::cout << ibin << " pass/total: " <<Num1->GetBinContent(ibin) << std::endl;
+ // 
+ // eff_1->Divide(Num1,Denom1,"cp");
+ // 
+ // //Num1->Divide(Denom1);
+ // eff_1->SetMarkerStyle(markerstyle);
+ // eff_1->SetMarkerColor(color1);
 
-  eff_1->SetFillStyle(1001);
-  eff_1->SetLineWidth((short)1.5);
+ // eff_1->SetFillStyle(1001);
+ // eff_1->SetLineWidth((short)1.5);
   
   //Num1->Divide(Denom1);
   ////
   /// third
   TH1F* Denom2;
-  Denom2 = new TH1F("Denom2","Denom2",bins,low,high);
+  Denom2 = new TH1F("Denom2","Denom2",bins,binarray);
   Denom2->Sumw2();
   tauTree2->Draw(variable+">>+Denom2",GenCut);
 
   TH1F* Num2;
-  Num2 = new TH1F("Num2","Num2",bins,low,high);
+  Num2 = new TH1F("Num2","Num2",bins,binarray);
   tauTree2->Draw(variable+">>+Num2",RecoCut);
 
   TGraphAsymmErrors *eff_2 = new TGraphAsymmErrors();
+
+  std::cout<<"PU200 denominator: "<<Denom2->Integral()<<std::endl;
+  std::cout<<"PU200 Numerator: "<<Num2->Integral()<<std::endl;
 
   eff_2->Divide(Num2,Denom2,"cp");
   //Num2->Divide(Denom2);
 
   eff_2->SetMarkerStyle(markerstyle);
-  eff_2->SetMarkerColor(color2);
+  eff_2->SetMarkerColor(color1);
 
   eff_2->SetFillStyle(1001);
   eff_2->SetLineWidth((short)1.5);
@@ -233,12 +238,12 @@ void plotTwoTauFakes(){
   //////
  /////fourth
   //TH1F* Denom3;
-  //Denom3 = new TH1F("Denom3","Denom3",bins,low,high);
+  //Denom3 = new TH1F("Denom3","Denom3",bins,binarray);
   //Denom3->Sumw2();
   //tauTree3->Draw(variable+">>+Denom3",GenCut);
 
   //TH1F* Num3;
-  //Num3 = new TH1F("Num3","Num3",bins,low,high);
+  //Num3 = new TH1F("Num3","Num3",bins,binarray);
   //tauTree3->Draw(variable+">>+Num3",RecoCut);
 
   //TGraphAsymmErrors *eff_3 = new TGraphAsymmErrors();
@@ -259,7 +264,7 @@ void plotTwoTauFakes(){
   //mg->SetTitle("Phase 2 Preliminary Studies");
 
   mg->Add(eff);
-  mg->Add(eff_1); 
+  //mg->Add(eff_1); 
   mg->Add(eff_2);
   //mg->Add(eff_3);
 
@@ -280,7 +285,7 @@ void plotTwoTauFakes(){
   leg->SetFillColor(kWhite);
   leg->SetTextSize(0.025);
   leg->AddEntry(eff,"PU0","PL"); 
-  leg->AddEntry(eff_1,"PU140","PL");
+  //leg->AddEntry(eff_1,"PU140","PL");
   leg->AddEntry(eff_2,"PU200","PL");
   //TLegend *leg1 = new TLegend(.30,.735,.67,.842,legLabel1,"nbNDC");
   ////setLegendStyles(leg,legLabel, 1);
@@ -301,6 +306,6 @@ void plotTwoTauFakes(){
   c1->Update();
   c1->RedrawAxis();
   c1->GetFrame()->Draw();
-  c1->SaveAs("930Pre4Plots_Aug30/"+outFileName+".pdf");
+  c1->SaveAs("Oct25Plots/"+outFileName+".pdf");
 
 }
