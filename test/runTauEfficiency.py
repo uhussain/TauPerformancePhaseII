@@ -9,7 +9,9 @@ options = VarParsing ('analysis')
 #options.inputFiles="/store/relval/CMSSW_9_0_0_pre4/RelValZTT_14TeV/MINIAODSIM/90X_upgrade2023_realistic_v3_2023D4Timing-v1/10000/0CF569B0-B4EC-E611-A970-0025905B85DC.root"
 #options.inputFiles="/store/relval/CMSSW_9_0_0_pre4/RelValZTT_14TeV/MINIAODSIM/PU25ns_90X_upgrade2023_realistic_v3_D4TPU200c2-v1/10000/22224E09-53F1-E611-A2E9-0CC47A4D7670.root"
 #options.inputFiles="/store/user/adewit/Jun22_MC_91X/GluGluHToTauTau_M125_14TeV_powheg_pythia8/crab_GluGluHToTauTau_M-125-barrel-200PU-miniAOD/170711_074522/0000/out_miniAOD_prod_99.root"
-#options.outputFile ="TwoTaus_Htt_911_pu200_test.root"
+#options.inputFiles="/store/user/agilbert/DYJetsToTauTau_M-50_TuneCUETP8M1_14TeV-madgraphMLM-pythia8/miniaod-prod-020117-0PU/170803_115641/0000/miniaod_1.root"
+options.inputFiles="file:/afs/cern.ch/work/d/dtsiakko/public/miniAOD_TauReco_ak4PFJets_ggH_PU200.root"
+options.outputFile ="TwoTaus_Demetra.root"
 
 options.register('inputFileList', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Manual file list input, will query DAS if empty')
 options.parseArguments()
@@ -45,9 +47,10 @@ process.source = cms.Source("PoolSource",
 # Main
 process.cutBased = cms.EDAnalyzer("phase2Taus",
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    taus = cms.InputTag("slimmedTaus"),
-    tausOrg = cms.InputTag("slimmedTausOrg"),
+    taus = cms.InputTag("selectedPatTaus"),
+    tausOrg = cms.InputTag("slimmedTaus"),
     jets = cms.InputTag("slimmedJets"),
+    genJets=cms.InputTag("slimmedGenJets"),
     tauID = cms.string("byCombinedIsolationDeltaBetaCorrRaw3Hits"),
     pruned = cms.InputTag("prunedGenParticles")
 )
