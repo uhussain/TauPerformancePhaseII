@@ -292,15 +292,22 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    lumis_  = iEvent.luminosityBlock();
    
    std::vector<const reco::GenParticle*> GenTaus;
+   std::vector<const reco::GenParticle*> GenEles;
+   std::vector<const reco::GenParticle*> GenMus;
    for(std::vector<reco::GenParticle>::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); genParticle++){
-      if(TMath::Abs(genParticle->pdgId()) == 15 && genParticle->isLastCopy() && genParticle->statusFlags().fromHardProcess()) GenTaus.push_back(&(*genParticle));
-     //if(TMath::Abs(genParticle->pdgId()) == 11) GenEles.push_back(&(*genParticle));
+      if(TMath::Abs(genParticle->pdgId()) == 15 && genParticle->isLastCopy() && genParticle->statusFlags().fromHardProcess()) GenTaus.push_back(&(*genParticle)); 
+      if(TMath::Abs(genParticle->pdgId()) == 11 && genParticle->isLastCopy() && genParticle->statusFlags().fromHardProcess()) GenEles.push_back(&(*genParticle));
+      if(TMath::Abs(genParticle->pdgId()) == 13 && genParticle->isLastCopy() && genParticle->statusFlags().fromHardProcess()) GenMus.push_back(&(*genParticle));
+      //if(TMath::Abs(genParticle->pdgId()) == 11) GenEles.push_back(&(*genParticle));
      //if(TMath::Abs(genParticle->pdgId()) == 13) GenMus.push_back(&(*genParticle));
    }
 
    std::vector<pat::Jet> Jets;
    for (unsigned int iJet = 0; iJet < jetHandle->size() ; ++iJet){
+//   std::vector<reco::Jet> Jets;
+//   for (unsigned int iJet = 0; iJet < genJets->size() ; ++iJet){
      pat::JetRef jetCand(jetHandle, iJet);
+     //const reco::Jet *jetCand = &(*genJets)[iJet];
      if(jetCand->pt() < 18 )continue;
      bool isATau=false;
      for(auto genTau : GenTaus){
@@ -313,7 +320,17 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	        isATau=true;
        
      }
-     if(!isATau)
+     bool isAEle=false;
+     for(auto genEle : GenEles){
+       if (reco::deltaR(jetCand->eta(),jetCand->phi(),genEle->eta(),genEle->phi()) < 0.5)
+	        isAEle=true;
+     }
+     bool isAMu=false;
+     for(auto genMu : GenMus){
+       if (reco::deltaR(jetCand->eta(),jetCand->phi(),genMu->eta(),genMu->phi()) < 0.5)
+	        isAMu=true;
+     }
+     if(!isATau && !isAEle && !isAMu)
        Jets.push_back(*jetCand);
    }   
    std::cout<<run_<<":"<<event_<<":"<<lumis_<<std::endl;
@@ -472,11 +489,11 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
      jetTauMatch_=0;
      genJetMatch_ = 0;
 
-     for (unsigned int iGenJet = 0; iGenJet < genJets->size() ; ++iGenJet){
-       reco::GenJetRef genJet(genJets, iGenJet);
-       if (reco::deltaR(genJet->eta(),genJet->phi(),jet.eta(),jet.phi()) < 0.4)
-         genJetMatch_ = 1;
-    }
+   //  for (unsigned int iGenJet = 0; iGenJet < genJets->size() ; ++iGenJet){
+   //    reco::GenJetRef genJet(genJets, iGenJet);
+   //    if (reco::deltaR(genJet->eta(),genJet->phi(),jet.eta(),jet.phi()) < 0.4)
+   //      genJetMatch_ = 1;
+   // }
 
      for(const pat::Tau &tau : *taus){
        if (reco::deltaR(tau.eta(),tau.phi(),jet.eta(),jet.phi()) < 0.3 && tau.tauID("decayModeFinding")>-1 && tau.tauID("chargedIsoPtSum")>-1){

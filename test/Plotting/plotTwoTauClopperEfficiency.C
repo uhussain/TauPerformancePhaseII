@@ -65,11 +65,11 @@ void plotTwoTauClopperEfficiency(){
   TString isoCut = "2";
   //Plotting Variables
   TString variable = "genTauPt";
-  TString GenCut= "genTauPt> 20 && abs(genTauEta)<2.3";
+  TString GenCut= "genTauPt> 20 && abs(genTauEta)<3.0";
   
   //TString GenCut1= "genTauPt > 22 && abs(genTauEta)> 2.3 && abs(genTauEta) <4.0 && (dmf!=5&&dmf!=6 && dmf > -1) && (dmf == 10) &&"+z3;
  
-  TString RecoCut= "tauPt > 20 && abs(tauEta)<2.3 && taupfTausDiscriminationByDecayModeFinding==1 &&" + GenCut;
+  TString RecoCut= "tauPt > 20 && abs(tauEta)<3.0 && taupfTausDiscriminationByDecayModeFinding==1 &&" + GenCut;
   
   //TString RecoCut= "tauPt > 20 && abs(tauEta)<3.0 &&" + GenCut;
   //TString RecoCut1= "tauPt>22&&abs(tauEta)>2.3&& abs(genTauEta)<4.0&&" + GenCut1;
