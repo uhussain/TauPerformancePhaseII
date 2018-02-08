@@ -64,13 +64,13 @@ void plotTwoTauFakes_eta(){
   TString isoCut = "2";
   //Plotting Variables
   TString variable = "jetEta";
-  TString GenCut= "jetPt> 20 && jetPt < 400 && abs(jetEta) < 3.0 && (dm!=5&&dm!=6 && dm > -1) && taupfTausDiscriminationByDecayModeFinding==1";
+  TString GenCut= "jetPt> 20 && jetPt < 400 && abs(jetEta) < 3.0";
   
   //TString GenCut1= "genTauPt > 22 && abs(genTauEta)> 2.3 && abs(genTauEta) <4.0 && (dmf!=5&&dmf!=6 && dmf > -1) && (dmf == 10) &&"+z3;
  
   //TString RecoCut= "tauPt > 20 && abs(tauEta)<2.3 && jetTauMatch==1 && taupfTausDiscriminationByDecayModeFinding==1 && tauChargedIsoPtSum<1.5 &&" + GenCut;
 
-  TString RecoCut= "tauPt > 20 && abs(tauEta) < 3.0 && tauChargedIsoPtSum<2.5 &&" + GenCut;
+  TString RecoCut= "tauPt > 20 && abs(tauEta) < 3.0 && taupfTausDiscriminationByDecayModeFinding==1 && tauChargedIsoPtSum<2.5 &&" + GenCut;
 
   setTDRStyle();
 

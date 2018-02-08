@@ -65,7 +65,7 @@ void plotTwoTauClopperEfficiency_eta(){
   TString isoCut = "2";
   //Plotting Variables
   TString variable = "genTauEta";
-  TString GenCut= "genTauPt> 20 && abs(genTauEta)<3.0 && (dm!=5&&dm!=6 && dm > -1)";
+  TString GenCut= "genTauPt> 20 && abs(genTauEta)<3.0";
   
   //TString GenCut1= "genTauPt > 22 && abs(genTauEta)> 2.3 && abs(genTauEta) <4.0 && (dmf!=5&&dmf!=6 && dmf > -1) && (dmf == 10) &&"+z3;
  
