@@ -377,7 +377,7 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
      //std::cout<<" pt "<<genTauPt_<<" eta "<<genTauEta_<<std::endl;
      for(const pat::Tau &tau : *taus){
        if (reco::deltaR(tau.eta(),tau.phi(),genTauVis.eta(),genTauVis.phi()) < 0.5 && tau.tauID("decayModeFinding")>-1 && tau.tauID("chargedIsoPtSum")>-1){ 
-        std::cout<<"RecoTauMatched"<<std::endl;
+        //std::cout<<"RecoTauMatched"<<std::endl;
         genTauMatch_ = 1;
 	      tauPt_  =tau.pt();
 	      tauEta_ =tau.eta();
@@ -445,7 +445,7 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
           }
         }
         //const auto& TauVtx= tau.leadChargedHadrCand()->vertexRef();
-        std::cout<<"vtx_index: "<<vtx_index<<std::endl;
+        //std::cout<<"vtx_index: "<<vtx_index<<std::endl;
 	      //now do vtx variable filling
 	      vtxIndex_ = vtx_index;
 	      const reco::Vertex& vtx = (vtx_index == -1 ? (*vertices)[0] : (*vertices)[vtx_index]);
@@ -489,11 +489,11 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
      jetTauMatch_=0;
      genJetMatch_ = 0;
 
-   //  for (unsigned int iGenJet = 0; iGenJet < genJets->size() ; ++iGenJet){
-   //    reco::GenJetRef genJet(genJets, iGenJet);
-   //    if (reco::deltaR(genJet->eta(),genJet->phi(),jet.eta(),jet.phi()) < 0.4)
-   //      genJetMatch_ = 1;
-   // }
+     for (unsigned int iGenJet = 0; iGenJet < genJets->size() ; ++iGenJet){
+       reco::GenJetRef genJet(genJets, iGenJet);
+       if (reco::deltaR(genJet->eta(),genJet->phi(),jet.eta(),jet.phi()) < 0.1)
+         genJetMatch_ = 1;
+    }
 
      for(const pat::Tau &tau : *taus){
        if (reco::deltaR(tau.eta(),tau.phi(),jet.eta(),jet.phi()) < 0.3 && tau.tauID("decayModeFinding")>-1 && tau.tauID("chargedIsoPtSum")>-1){

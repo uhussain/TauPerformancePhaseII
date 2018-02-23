@@ -34,7 +34,7 @@
 void applyPadStyle(TPad* pad1){
   pad1->SetFillColor(0);
   pad1->Draw();  pad1->cd();  pad1->SetLeftMargin(0.15);  pad1->SetBottomMargin(0.13); pad1->SetRightMargin(0.05);
-  pad1->SetLogy();
+  //pad1->SetLogy();
   pad1->SetGrid(10,10);
 }
 
@@ -42,9 +42,9 @@ void plotTwoTauFakes_eta(){
    
   //TString fileName = "/data/uhussain/TwoTausEff_Aug8_hadd/DYJetsToLL_PU0.root"; 
   //TString fileName2 = "/data/uhussain/TwoTausEff_Aug8_hadd/DYJetsToLL_PU200.root";
-  TString fileName = "/data/uhussain/Phase2Taus_Oct30_hadd/QCD_Flat_MiniAOD_PU0.root";  
+  TString fileName = "/data/uhussain/Phase2Taus_Feb22_hadd/QCD_Flat_MiniAOD_PU0.root";  
   //TString fileName1 = "/data/uhussain/Phase2Taus_Oct25_hadd/QCD_Flat_MiniAOD_PU140.root"; 
-  TString fileName2 = "/data/uhussain/Phase2Taus_Oct30_hadd/QCD_Flat_MiniAOD_PU200.root"; 
+  TString fileName2 = "/data/uhussain/Phase2Taus_Feb22_hadd/QCD_Flat_MiniAOD_PU200.root"; 
   //TString fileName2 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_300.root";  
   //TString fileName3 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_3000.root"; 
   //TString treePath = "cutBased/jetOrgPFTaus"; 
@@ -70,7 +70,7 @@ void plotTwoTauFakes_eta(){
  
   //TString RecoCut= "tauPt > 20 && abs(tauEta)<2.3 && jetTauMatch==1 && taupfTausDiscriminationByDecayModeFinding==1 && tauChargedIsoPtSum<1.5 &&" + GenCut;
 
-  TString RecoCut= "tauPt > 20 && abs(tauEta) < 3.0 && taupfTausDiscriminationByDecayModeFinding==1 && tauChargedIsoPtSum<2.5 &&" + GenCut;
+  TString RecoCut= "tauPt > 20 && abs(tauEta) < 3.0 && taupfTausDiscriminationByDecayModeFinding==1 &&" + GenCut;
 
   setTDRStyle();
 
@@ -97,10 +97,11 @@ void plotTwoTauFakes_eta(){
   //Color_t colort5 = TColor::GetColor("#0288D1"); //green blue color2
   Color_t color2 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
   
-  TString outFileName = "plot-Fakes-eta-HGCAL-puall_olddmf";
+  TString outFileName = "plot-Fakes-eta-HGCAL-puall_olddmf_nogenJetMatching_oldPlot";
 
   //TString legLabel = "jet #rightarrow #tau_{h} (QCDFlat) oldDMF && chargedIso < 1.5 GeV";
-  TString legLabel = "QCD"; 
+  //TString legLabel = "QCD"; 
+  TString legLabel = " jet #rightarrow #tau_{h} (Fakes) QCD"; 
   
   //TString legLabel = "jet #rightarrow #tau_{h} (Fakes) from DYJets"; 
   //TString legLabel1 = "jet #rightarrow #tau_{h} (Fakes) from TTbar production (PU0)";
@@ -273,7 +274,7 @@ void plotTwoTauFakes_eta(){
   mg->GetXaxis()->SetTitle(xaxis);
   mg->GetYaxis()->SetTitle("Tau Misidentification Probability");
   mg->GetYaxis()->SetTitleOffset(1.1);
-  mg->SetMaximum(1.5);
+  mg->SetMaximum(1.2);
   mg->SetMinimum(0.0);
   
 
@@ -319,5 +320,5 @@ void plotTwoTauFakes_eta(){
   c1->Update();
   c1->RedrawAxis();
   c1->GetFrame()->Draw();
-  c1->SaveAs("HGCalSamples_Iso/"+outFileName+".pdf");
+  c1->SaveAs("Feb23_genJetsMatching/"+outFileName+".pdf");
 }
