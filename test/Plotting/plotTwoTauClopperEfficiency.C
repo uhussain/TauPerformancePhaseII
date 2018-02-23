@@ -99,7 +99,7 @@ void plotTwoTauClopperEfficiency(){
   Color_t color3 = TColor::GetColor("#0288D1"); //green blue color2 
   Color_t color2 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
   
-  TString outFileName = "plot-ZTT-PT-eta2.3-puall_newdmf";
+  TString outFileName = "plot-ZTT-PT-eta3.0-puall_olddm";
   
   //TString legLabel = "#tau_{h} from Z #rightarrow #tau #tau (RelVal)"; 
   TString legLabel = "Z #bf{#rightarrow #tau #tau}"; 
@@ -320,6 +320,6 @@ void plotTwoTauClopperEfficiency(){
   c1->Update();
   c1->RedrawAxis();
   c1->GetFrame()->Draw();
-  c1->SaveAs("HGCalSamples_Iso/"+outFileName+".pdf");
+  c1->SaveAs("Feb23_genJetsMatching/"+outFileName+".pdf");
 
 }

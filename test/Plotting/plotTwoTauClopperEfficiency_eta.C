@@ -40,9 +40,9 @@ void applyPadStyle(TPad* pad1){
 
 void plotTwoTauClopperEfficiency_eta(){
 
-  TString fileName = "/data/uhussain/Phase2Taus_Oct9_hadd/RelValZTT_MiniAOD_PU0.root"; 
+  TString fileName = "/data/uhussain/ProcessedTauFiles/Phase2Taus_Oct9_hadd/RelValZTT_MiniAOD_PU0.root"; 
   //TString fileName1 = "/data/uhussain/Phase2Taus_Oct9_hadd/RelValZTT_MiniAOD_PU140.root"; 
-  TString fileName2 = "/data/uhussain/Phase2Taus_Oct9_hadd/RelValZTT_MiniAOD_PU200.root"; 
+  TString fileName2 = "/data/uhussain/ProcessedTauFiles/Phase2Taus_Oct9_hadd/RelValZTT_MiniAOD_PU200.root"; 
   //TString fileName2 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_300.root";  
   //TString fileName3 = "/data/uhussain/TwoTausEff_July19_hadd/RelValTTbar_miniAOD_3000.root"; 
   //TString fileName = " /data/uhussain/TwoTausEff_July26_hadd/Ztt_pre4_miniAOD_TwoTaus_pu0.root";  
@@ -69,7 +69,7 @@ void plotTwoTauClopperEfficiency_eta(){
   
   //TString GenCut1= "genTauPt > 22 && abs(genTauEta)> 2.3 && abs(genTauEta) <4.0 && (dmf!=5&&dmf!=6 && dmf > -1) && (dmf == 10) &&"+z3;
  
-  TString RecoCut= "tauPt > 20 && abs(tauEta)<3.0 && taupfTausDiscriminationByDecayModeFinding==1 && tauChargedIsoPtSum<2.5 &&" + GenCut;
+  TString RecoCut= "tauPt > 20 && abs(tauEta)<3.0 && taupfTausDiscriminationByDecayModeFinding==1 &&" + GenCut;
   
   //TString RecoCut= "tauPt > 22 && abs(tauEta)<1.5 &&" + GenCut;
   //TString RecoCut1= "tauPt>22&&abs(tauEta)>2.3&& abs(genTauEta)<4.0&&" + GenCut1;
@@ -99,7 +99,7 @@ void plotTwoTauClopperEfficiency_eta(){
   Color_t color3 = TColor::GetColor("#0288D1"); //green blue color2 
   Color_t color2 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
   
-  TString outFileName = "plot-ZTT-eta-puall_olddmf_iso2.5";
+  TString outFileName = "plot-ZTT-eta-puall_olddmf";
   
   //TString legLabel = "#tau_{h} from Z #rightarrow #tau #tau (RelVal)"; 
   TString legLabel = "Z #bf{#rightarrow #tau #tau}"; 
@@ -318,6 +318,5 @@ void plotTwoTauClopperEfficiency_eta(){
   c1->Update();
   c1->RedrawAxis();
   c1->GetFrame()->Draw();
-  c1->SaveAs("HGCalSamples_Iso/"+outFileName+".pdf");
-
+  c1->SaveAs("Feb23_genJetsMatching/"+outFileName+".pdf");
 }
