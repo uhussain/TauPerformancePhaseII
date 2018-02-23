@@ -42,9 +42,9 @@ void plotTwoTauFakes(){
    
   //TString fileName = "/data/uhussain/TwoTausEff_Aug8_hadd/DYJetsToLL_PU0.root"; 
   //TString fileName2 = "/data/uhussain/TwoTausEff_Aug8_hadd/DYJetsToLL_PU200.root";
-  TString fileName = "/data/uhussain/Phase2Taus_Feb22_hadd/QCD_Flat_MiniAOD_PU0.root";  
+  TString fileName = "/data/uhussain/Phase2Taus_Feb23_hadd/QCD_Flat_MiniAOD_PU0.root";  
   //TString fileName1 = "/data/uhussain/Phase2Taus_Oct25_hadd/QCD_Flat_MiniAOD_PU140.root"; 
-  TString fileName2 = "/data/uhussain/Phase2Taus_Feb22_hadd/QCD_Flat_MiniAOD_PU200.root"; 
+  TString fileName2 = "/data/uhussain/Phase2Taus_Feb23_hadd/QCD_Flat_MiniAOD_PU200.root"; 
   //TString fileName2 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_300.root";  
   //TString fileName3 = "/data/uhussain/TwoTausEff_Aug9_hadd/RelValTTbar_miniAOD_3000.root"; 
   //TString treePath = "cutBased/jetOrgPFTaus"; 
@@ -64,7 +64,7 @@ void plotTwoTauFakes(){
   TString isoCut = "2";
   //Plotting Variables
   TString variable = "jetPt";
-  TString GenCut= "jetPt> 20 && jetPt < 400 && abs(jetEta) < 3.0";
+  TString GenCut= "jetPt > 20 && abs(jetEta) < 3.0 && genJetMatch==1";
   
   //TString GenCut1= "genTauPt > 22 && abs(genTauEta)> 2.3 && abs(genTauEta) <4.0 && (dmf!=5&&dmf!=6 && dmf > -1) && (dmf == 10) &&"+z3;
  
@@ -86,7 +86,7 @@ void plotTwoTauFakes(){
   gStyle->SetOptStat(0);
   gROOT->ForceStyle();
   //Style
-  TString xaxis = "Gen Jet p_{T} (GeV)";
+  TString xaxis = "Reco Jet p_{T} (GeV)";
   int markerstyle = 20;
 
   Color_t color = TColor::GetColor("#283593");//dark blue color1
@@ -97,7 +97,7 @@ void plotTwoTauFakes(){
   //Color_t colort5 = TColor::GetColor("#0288D1"); //green blue color2
   Color_t color2 = TColor::GetColor("#FF00FF"); //magenta (Signal before fix)
   
-  TString outFileName = "plot-Fakes-PT-eta3.0-puall_olddmf_nogenJetMatching";
+  TString outFileName = "plot-Fakes-PT-eta3.0-puall_olddmf_genJetMatching01";
 
   //TString legLabel = "jet #rightarrow #tau_{h} (QCDFlat) oldDMF && chargedIso < 1.5 GeV";
   TString legLabel = " jet #rightarrow #tau_{h} (Fakes) QCD"; 
