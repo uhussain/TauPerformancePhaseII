@@ -404,55 +404,6 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
         goodReco_ = (bool) tau.tauID(tauID_) >0.5;
 
-        //get the matched vertex
-        int vtx_index = -1;
-        //float max_weight = 0.f;
-        //for( unsigned i = 0; i < vertices->size(); ++i ) {
-        //  const auto& vtx = (*vertices)[i];     
-        //  //std::cout<<"fine here"<<std::endl;
-        //  const float weight = vtx.trackWeight(tau.leadChargedHadrCand()->trackRef());// check me -> Get track ref for charged hadron candidate 
-        // // std::cout<<"fails here"<<std::endl;
-        //  if( weight > max_weight ) {
-        //    max_weight = weight;
-        //    vtx_index = i;
-        //   }
-        //      }
-
-       // if (vertices->size()>0) {
-       //       pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(tau.leadChargedHadrCand().get());
-       //       float max_weight = 0.f;
-       //       for( unsigned i = 0; i < vertices->size(); ++i ) {
-       //         const auto& vtx = (*vertices)[i];     
-       //         //std::cout<<"fine here"<<std::endl;
-       //         reco::TrackBaseRef const& trk = dynamic_cast<reco::TrackBaseRef const&>(packedLeadTauCand->bestTrack());
-       //         //const auto& trk = *(packedLeadTauCand->bestTrack());
-       //         const float weight = vtx.trackWeight(trk);// check me -> Get track ref for charged hadron candidate 
-       //        // std::cout<<"fails here"<<std::endl;
-       //         if( weight > max_weight ) {
-       //           max_weight = weight;
-       //           vtx_index = i;
-       //          }
-       //             }
-        
-        pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(tau.leadChargedHadrCand().get());
-        const auto& TauVtx = packedLeadTauCand->vertexRef();
-
-
-        for( unsigned i = 0; i < vertices->size(); ++i ) {
-          const auto& vtx = (*vertices)[i]; 
-          if(vtx.x()==TauVtx->x() && vtx.y()==TauVtx->y() && vtx.z()==TauVtx->z()){
-            vtx_index=i;
-          }
-        }
-        //const auto& TauVtx= tau.leadChargedHadrCand()->vertexRef();
-        //std::cout<<"vtx_index: "<<vtx_index<<std::endl;
-	      //now do vtx variable filling
-	      vtxIndex_ = vtx_index;
-	      const reco::Vertex& vtx = (vtx_index == -1 ? (*vertices)[0] : (*vertices)[vtx_index]);
-	      vtxX_ = vtx.x();
-	      vtxY_ = vtx.y();
-	      vtxZ_ = vtx.z();
-	      break;
             }
           }
     tree->Fill(); 
@@ -491,8 +442,13 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
      for (unsigned int iGenJet = 0; iGenJet < genJets->size() ; ++iGenJet){
        reco::GenJetRef genJet(genJets, iGenJet);
-       if (reco::deltaR(genJet->eta(),genJet->phi(),jet.eta(),jet.phi()) < 0.1)
+       if(genJet->pt() < 18 )continue;
+       //std::cout<<"genJetPt: "<<genJet->pt()<<std::endl;
+       if (reco::deltaR(genJet->eta(),genJet->phi(),jet.eta(),jet.phi()) < 0.1){
          genJetMatch_ = 1;
+         //std::cout<<"genJetMatched"<<std::endl;
+         break;
+       }
     }
 
      for(const pat::Tau &tau : *taus){
@@ -519,26 +475,6 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         tauPuCorrPtSum_=tau.tauID("puCorrPtSum");
         taufootprintCorrection_=tau.tauID("footprintCorrection");
         tauphotonPtSumOutsideSignalCone_=tau.tauID("photonPtSumOutsideSignalCone");
-        //get the matched vertex
-        int vtx_index = -1;
-        //float max_weight = 0.f;
-        //for( unsigned i = 0; i < vertices->size(); ++i ) {
-        //  const auto& vtx = (*vertices)[i];     
-        //  const float weight = vtx.trackWeight(tau.leadPFChargedHadrCand()->trackRef());// check me -> Get track ref for charged hadron candidate
-        //  if( weight > max_weight ) {
-        //    max_weight = weight;
-        //    vtx_index = i;
-        //   }
-        //      }
-
-	      //now do vtx variable filling
-	      //vtxIndex_ = vtx_index;
-	      const reco::Vertex& vtx = (vtx_index == -1 ? (*vertices)[0] : (*vertices)[vtx_index]);
-	      vtxX_ = vtx.x();
-	      vtxY_ = vtx.y();
-	      vtxZ_ = vtx.z();
-	      
-        break;
             }
           }
     jetTree->Fill(); 
