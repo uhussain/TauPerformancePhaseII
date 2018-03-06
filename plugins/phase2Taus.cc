@@ -11,8 +11,7 @@
      [Notes on implementation]
 */
 //
-// Original Author:  Isabel Ojalvo
-//         Created:  Tue, 15 Nov 2016 16:00:32 GMT
+// Author: Usama Hussain
 //
 //
 
