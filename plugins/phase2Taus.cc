@@ -135,6 +135,11 @@ class phase2Taus : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
   int genJetMatch_;
   int jetTauMatch_;
   
+  //New Charged isolation variables
+  float tau_iso_dz01;
+  float tau_iso_dz0015;
+  float tau_iso_pv;
+  
   reco::Candidate::LorentzVector GetVisibleP4(std::vector<const reco::GenParticle*>& daughters);
   void findDaughters(const reco::GenParticle* mother, std::vector<const reco::GenParticle*>& daughters);
   bool isNeutrino(const reco::Candidate* daughter);
@@ -185,7 +190,6 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    tree->Branch("vtxY",         &vtxY_,        "vtxY_/D"         );
    tree->Branch("vtxZ",         &vtxZ_,        "vtxZ_/D"         );
    tree->Branch("vtxIndex",     &vtxIndex_,    "vtxIndex_/I"     );
-   tree->Branch("dz_tt", &dz_tt_, "dz_tt_/D"); //////Dem
    tree->Branch("dm",&dm_,"dm_/I");
    tree->Branch("goodReco",&goodReco_,"goodReco_/I");
    tree->Branch("tauMass",&tauMass_,"tauMass_/D");
@@ -200,6 +204,10 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    tree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
    tree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
    tree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
+   //New ChargedIso variables
+   tree->Branch("tau_iso_dz01", &tau_iso_dz01);
+   tree->Branch("tau_iso_dz0015", &tau_iso_dz0015);
+   tree->Branch("tau_iso_pv", &tau_iso_pv);
    tree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
    tree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
    tree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
@@ -260,7 +268,6 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    jetTree->Branch("vtxX",         &vtxX_,        "vtxX_/D"         );
    jetTree->Branch("vtxY",         &vtxY_,        "vtxY_/D"         );
    jetTree->Branch("vtxZ",         &vtxZ_,        "vtxZ_/D"         ); 
-   jetTree->Branch("dz_tt", &dz_tt_, "dz_tt_/D");
    //jetTree->Branch("vtxIndex",     &vtxIndex_,    "vtxIndex_/I"     );
    jetTree->Branch("dm",          &dm_,         "dm_/I"          );
    jetTree->Branch("tauMass",      &tauMass_,     "tauMass_/D"      );
@@ -275,6 +282,10 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    jetTree->Branch("tauByIsolationMVArun2v1PWnewDMwLTraw", &tauByIsolationMVArun2v1PWnewDMwLTraw_);
    jetTree->Branch("tauByIsolationMVArun2v1PWoldDMwLTraw", &tauByIsolationMVArun2v1PWoldDMwLTraw_);
    jetTree->Branch("tauChargedIsoPtSum"  ,&tauChargedIsoPtSum_);
+   //New ChargedIso variables
+   jetTree->Branch("tau_iso_dz01", &tau_iso_dz01);
+   jetTree->Branch("tau_iso_dz0015", &tau_iso_dz0015);
+   jetTree->Branch("tau_iso_pv", &tau_iso_pv);
    jetTree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
    jetTree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
    jetTree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
@@ -442,10 +453,15 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
      
      nvtx_=-10;
      dm_=-10;
-     dz_tt_=-10;
+     //dz_tt_=-10;
      goodReco_=0;
      genTauMatch_=0;
 
+     //New Charged isolation variables
+     tau_iso_dz01=0;
+     tau_iso_dz0015=0;
+     tau_iso_pv=0;
+     
      std::vector<const reco::GenParticle*> genTauDaughters;
      findDaughters(genTau, genTauDaughters);
      reco::Candidate::LorentzVector genTauVis = GetVisibleP4(genTauDaughters);
@@ -454,17 +470,9 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
      //std::cout<<" pt "<<genTauPt_<<" eta "<<genTauEta_<<std::endl;
      for(const pat::Tau &tau : *taus){
-       for(auto cand : tau.isolationChargedHadrCands()){  ///dem
-         if (abs(cand->charge())<0)continue;   ///dem >or < Fix
-         if (cand->pt()<=0.5 or cand->dxy(vertices[tau_vertex_idxpf].position())>=0.1)continue; /////FIX ME dem
-         if (cand->hasTrackDetails()){//dem
-            tt = cand->pseudoTrack();//dem
-            if (tt.normalizedChi2()>=100. or cand.numberOfHits()<3)continue;//dem
-	 }//dem
-         dz_tt =cand.dz(vertices[tau_vertex_idxpf].position()); //dem
-       } //dem
        if (reco::deltaR(tau.eta(),tau.phi(),genTauVis.eta(),genTauVis.phi()) < 0.5 && tau.tauID("decayModeFinding")>-1 && tau.tauID("chargedIsoPtSum")>-1){ 
         //std::cout<<"RecoTauMatched"<<std::endl;
+        
         genTauMatch_ = 1;
 	      tauPt_  =tau.pt();
 	      tauEta_ =tau.eta();
@@ -491,6 +499,49 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
         goodReco_ = (bool) tau.tauID(tauID_) >0.5;
 
+        //New Charged Isolation calculation
+        unsigned int tau_vertex_idxpf=-1; 
+       //Use candidate to vertex associaton as in MiniAOD
+
+        pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(tau.leadChargedHadrCand().get());
+        tau_vertex_idxpf = packedLeadTauCand->vertexRef().key();
+       //or take vertex closest in dz as in tau code
+       //float min_dz = 99;
+       //for(unsigned i = 0; i < vertices->size(); ++i) {
+        //const auto& vtx = (*vertices)[i];     
+       //   float tmp_dz = abs(tau.leadChargedHadrCand()->dz(vtx.position()));
+            //if (tmp_dz<min_dz){
+                //min_dz = tmp_dz;
+                //tau_vertex_idxpf = i;
+        //}}
+      
+       for(auto IsoCand: tau.isolationChargedHadrCands()){
+         pat::PackedCandidate const* cand = dynamic_cast<pat::PackedCandidate const*>(IsoCand.get());
+         if (!(abs(cand->charge())>0))continue;  
+         //you can also check dR to be smaller than <0.5 (should be true by construction), 0.3, etc.
+        //Select charged cands
+        //firstly use only info accesible for all packedCands...
+
+        const auto& tau_vertex = (*vertices)[tau_vertex_idxpf];     
+         if ((cand->pt()<=0.5) || (cand->dxy(tau_vertex.position())>=0.1))continue; 
+         if (cand->hasTrackDetails()){
+            const auto &tt = cand->pseudoTrack();
+            if (tt.normalizedChi2()>=100. || cand->numberOfHits()<3)continue;
+	 }
+         //else: //FIXME: decide if you want to ignore particled w/o track info or retain them unless you are not able to apply cuts basing on track quality
+          //continue
+         //Dz vs tau PV
+         float dz_tt =cand->dz(tau_vertex.position());
+         if (abs(dz_tt)<0.1){ //MB: should well approximate default charged isolation sum 
+            tau_iso_dz01+=cand->pt();
+         }
+         if (abs(dz_tt)<0.015){ //MB: tight dz cut
+            tau_iso_dz0015+=cand->pt();
+         }
+         if ((cand->vertexRef().key() == tau_vertex_idxpf) && (cand->pvAssociationQuality() > 4)){ //well associated to tau PV, one can relax qual. criteria
+            tau_iso_pv+=cand->pt();
+         }
+       } 
         //get the matched vertex
         //int vtx_index = -1;
         //float max_weight = 0.f;
@@ -782,10 +833,15 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
      
      //nvtx_=-10;
      dm_=-10;
-     dz_tt_=-10;
+     //dz_tt_=-10;
      jetTauMatch_=0;
 
      genJetMatch_ = 0;
+
+     //New Charged isolation variables
+     tau_iso_dz01=0;
+     tau_iso_dz0015=0;
+     tau_iso_pv=0;
 
      for (unsigned int iGenJet = 0; iGenJet < genJets->size() ; ++iGenJet){
        reco::GenJetRef genJet(genJets, iGenJet);
@@ -798,16 +854,6 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
 
      for(const pat::Tau &tau : *taus){   // Fix it was *tausOrg??
-       for(auto cand : tau.isolationChargedHadrCands()){  ///dem
-         if (abs(cand.charge())<0)continue;   ///dem >or < Fix
-         if (cand.pt()<=0.5 or cand.dxy(vertices[tau_vertex_idxpf].position())>=0.1)continue; /////FIX ME dem
-         if (cand.hasTrackDetails()){//dem
-            tt = cand.pseudoTrack();//dem
-            if (tt.normalizedChi2()>=100. or cand.numberOfHits()<3)continue;//dem
-         }//dem
-         dz_tt =cand.dz(vertices[tau_vertex_idxpf].position()); //dem
-       } //dem
-
        if (reco::deltaR(tau.eta(),tau.phi(),jet.eta(),jet.phi()) < 0.3 && tau.tauID("decayModeFinding")>-1 && tau.tauID("chargedIsoPtSum")>-1){
 	      jetTauMatch_ = 1;
 	      tauPt_  =tau.pt();
@@ -831,6 +877,49 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         tauPuCorrPtSum_=tau.tauID("puCorrPtSum");
         taufootprintCorrection_=tau.tauID("footprintCorrection");
         tauphotonPtSumOutsideSignalCone_=tau.tauID("photonPtSumOutsideSignalCone");
+
+        //New Charged Isolation calculation
+        unsigned int tau_vertex_idxpf=-1; 
+       //Use candidate to vertex associaton as in MiniAOD
+        pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(tau.leadChargedHadrCand().get());
+        tau_vertex_idxpf = packedLeadTauCand->vertexRef().key();
+       //or take vertex closest in dz as in tau code
+       //float min_dz = 99;
+       //for(unsigned i = 0; i < vertices->size(); ++i) {
+       // const auto& vtx = (*vertices)[i];     
+       //   float tmp_dz = abs(tau.leadChargedHadrCand()->dz(vtx.position()));
+            //if (tmp_dz<min_dz){
+                //min_dz = tmp_dz;
+                //tau_vertex_idxpf = i;
+        //}}
+       for(auto IsoCand: tau.isolationChargedHadrCands()){
+         pat::PackedCandidate const* cand = dynamic_cast<pat::PackedCandidate const*>(IsoCand.get());
+         if (!(abs(cand->charge())>0))continue;  
+         //you can also check dR to be smaller than <0.5 (should be true by construction), 0.3, etc.
+        //Select charged cands
+        //firstly use only info accesible for all packedCands...
+
+        const auto& tau_vertex = (*vertices)[tau_vertex_idxpf];     
+         if ((cand->pt()<=0.5) || (cand->dxy(tau_vertex.position())>=0.1))continue; 
+         if (cand->hasTrackDetails()){
+            const auto &tt = cand->pseudoTrack();
+            if (tt.normalizedChi2()>=100. || cand->numberOfHits()<3)continue;
+	 }
+         //else: //FIXME: decide if you want to ignore particled w/o track info or retain them unless you are not able to apply cuts basing on track quality
+          //continue
+         //Dz vs tau PV
+         float dz_tt =cand->dz(tau_vertex.position());
+         if (abs(dz_tt)<0.1){ //MB: should well approximate default charged isolation sum 
+            tau_iso_dz01+=cand->pt();
+         }
+         if (abs(dz_tt)<0.015){ //MB: tight dz cut
+            tau_iso_dz0015+=cand->pt();
+         }
+         if ((cand->vertexRef().key() == tau_vertex_idxpf) && (cand->pvAssociationQuality() > 4)){ //well associated to tau PV, one can relax qual. criteria
+            tau_iso_pv+=cand->pt();
+         }
+       } 
+
         //get the matched vertex
        // int vtx_index = -1;// fix
         //float max_weight = 0.f;
