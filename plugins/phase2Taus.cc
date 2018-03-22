@@ -139,7 +139,8 @@ class phase2Taus : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
   float tau_iso_dz01;
   float tau_iso_dz0015;
   float tau_iso_pv;
-  
+  vector<double>IsoCandPt;
+
   reco::Candidate::LorentzVector GetVisibleP4(std::vector<const reco::GenParticle*>& daughters);
   void findDaughters(const reco::GenParticle* mother, std::vector<const reco::GenParticle*>& daughters);
   bool isNeutrino(const reco::Candidate* daughter);
@@ -208,6 +209,8 @@ phase2Taus::phase2Taus(const edm::ParameterSet& iConfig):
    tree->Branch("tau_iso_dz01", &tau_iso_dz01);
    tree->Branch("tau_iso_dz0015", &tau_iso_dz0015);
    tree->Branch("tau_iso_pv", &tau_iso_pv);
+   //tauisolationCands
+   tree->Branch("IsoCandPt",         &IsoCandPt);
    tree->Branch("tauNeutralIsoPtSum"  ,&tauNeutralIsoPtSum_);
    tree->Branch("tauByLooseCombinedIsolationDeltaBetaCorr3Hits", &tauByLooseCombinedIsolationDeltaBetaCorr3Hits_);
    tree->Branch("tauByMediumCombinedIsolationDeltaBetaCorr3Hits", &tauByMediumCombinedIsolationDeltaBetaCorr3Hits_);
@@ -424,6 +427,9 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    std::cout<<run_<<":"<<event_<<":"<<lumis_<<std::endl;
    std::cout<<"RecoTausSize: " <<taus->size()<<std::endl;
    std::cout<<"GenTausSize: "<<GenTaus.size()<<std::endl;
+
+   //Clear the vector before you go for the next tau
+   IsoCandPt.clear();
    for(auto genTau : GenTaus){
      tauPt_=-10;
      tauEta_=-10;
@@ -522,7 +528,10 @@ phase2Taus::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         //Select charged cands
         //firstly use only info accesible for all packedCands...
 
-        const auto& tau_vertex = (*vertices)[tau_vertex_idxpf];     
+        const auto& tau_vertex = (*vertices)[tau_vertex_idxpf];
+         //Saving info about candidates
+         IsoCandPt.push_back(cand->pt());
+         //Add more variables
          if ((cand->pt()<=0.5) || (cand->dxy(tau_vertex.position())>=0.1))continue; 
          if (cand->hasTrackDetails()){
             const auto &tt = cand->pseudoTrack();
