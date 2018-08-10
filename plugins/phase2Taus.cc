@@ -133,6 +133,27 @@ class phase2Taus : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
   int genJetMatch_;
   int jetTauMatch_;
   
+ //This is the part needed for this GenTauDecayMode function 
+	enum decayModes{
+		electron,
+		muon,
+		oneProngOther,
+		oneProng0Pi0,
+		oneProng1Pi0,
+		oneProng2Pi0,
+		threeProngOther,
+		threeProng0Pi0,
+		threeProng1Pi0,
+		rare,
+		other
+	};
+
+	decayModes getGenTauDecayMode(const reco::GenParticle* genTau)const;
+
+	template<class T>
+	void countDecayProducts(const T* genParticle,
+			int& numElectrons, int& numElecNeutrinos, int& numMuons, int& numMuNeutrinos,
+			int& numChargedHadrons, int& numPi0s, int& numOtherNeutralHadrons, int& numPhotons) const;
   reco::Candidate::LorentzVector GetVisibleP4(std::vector<const reco::GenParticle*>& daughters);
   void findDaughters(const reco::GenParticle* mother, std::vector<const reco::GenParticle*>& daughters);
   bool isNeutrino(const reco::Candidate* daughter);
@@ -144,6 +165,43 @@ class phase2Taus : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       // ----------member data ---------------------------
 };
 
+template<class T>
+void phase2Taus::countDecayProducts(const T* genParticle,
+		int& numElectrons, int& numElecNeutrinos, int& numMuons, int& numMuNeutrinos,
+		int& numChargedHadrons, int& numPi0s, int& numOtherNeutralHadrons, int& numPhotons)const{
+
+	if(!genParticle)return;
+
+	int absPdgId = TMath::Abs(genParticle->pdgId());
+	int status   = genParticle->status();
+	int charge   = genParticle->charge();
+
+	if ( absPdgId == 111 ) ++numPi0s;
+	else if ( status == 1 ) {
+		if      ( absPdgId == 11 ) ++numElectrons;
+		else if ( absPdgId == 12 ) ++numElecNeutrinos;
+		else if ( absPdgId == 13 ) ++numMuons;
+		else if ( absPdgId == 14 ) ++numMuNeutrinos;
+		else if ( absPdgId == 15 ) {
+			edm::LogError ("genDecayHelper::countDecayProducts")
+			<< "Found tau lepton with status code 1 !!";
+			return;
+		}
+		else if ( absPdgId == 16 ) return; // no need to count tau neutrinos
+		else if ( absPdgId == 22 ) ++numPhotons;
+		else if ( charge   !=  0 ) ++numChargedHadrons;
+		else                       ++numOtherNeutralHadrons;
+	} else {
+		unsigned numDaughters = genParticle->numberOfDaughters();
+		for ( unsigned iDaughter = 0; iDaughter < numDaughters; ++iDaughter ) {
+			const reco::GenParticle* daughter = dynamic_cast<const reco::GenParticle*>(genParticle->daughter(iDaughter));
+
+			countDecayProducts<reco::GenParticle>(daughter,
+					numElectrons, numElecNeutrinos, numMuons, numMuNeutrinos,
+					numChargedHadrons, numPi0s, numOtherNeutralHadrons, numPhotons);
+		}
+	}
+}
 //
 // constants, enums and typedefs
 //
@@ -529,6 +587,59 @@ void phase2Taus::findDaughters(const reco::GenParticle* mother, std::vector<cons
   }
 }
 
+phase2Taus::decayModes phase2Taus::getGenTauDecayMode(const reco::GenParticle* genTau)const{
+
+	//--- determine generator level tau decay mode
+		//
+		//    NOTE:
+		//        (1) function implements logic defined in PhysicsTools/JetMCUtils/src/JetMCTag::genTauDecayMode
+		//            for different type of argument
+		//        (2) this implementation should be more robust to handle cases of tau --> tau + gamma radiation
+		//
+		int numElectrons           = 0;
+		int numElecNeutrinos       = 0;
+		int numMuons               = 0;
+		int numMuNeutrinos         = 0;
+		int numChargedHadrons      = 0;
+		int numPi0s                = 0;
+		int numOtherNeutralHadrons = 0;
+		int numPhotons             = 0;
+
+		countDecayProducts<reco::GenParticle>(genTau,
+			numElectrons, numElecNeutrinos, numMuons, numMuNeutrinos,
+			numChargedHadrons, numPi0s, numOtherNeutralHadrons, numPhotons);
+
+		if      ( numElectrons == 1 && numElecNeutrinos == 1 ) return electron;
+		else if ( numMuons     == 1 && numMuNeutrinos   == 1 ) return muon;
+
+		switch ( numChargedHadrons ) {
+		case 1 :
+			if ( numOtherNeutralHadrons != 0 ) return oneProngOther;
+			switch ( numPi0s ) {
+			case 0:
+				return oneProng0Pi0;
+			case 1:
+				return oneProng1Pi0;
+			case 2:
+				return oneProng2Pi0;
+			default:
+				return oneProngOther;
+			}
+			case 3 :
+				if ( numOtherNeutralHadrons != 0 ) return threeProngOther;
+				switch ( numPi0s ) {
+				case 0:
+					return threeProng0Pi0;
+				case 1:
+					return threeProng1Pi0;
+				default:
+					return threeProngOther;
+				}
+				default:
+					return rare;
+		}
+		return other;
+}
 bool phase2Taus::isNeutrino(const reco::Candidate* daughter)
 {
   return (TMath::Abs(daughter->pdgId()) == 12 || TMath::Abs(daughter->pdgId()) == 14 || TMath::Abs(daughter->pdgId()) == 16 || TMath::Abs(daughter->pdgId()) == 18);
